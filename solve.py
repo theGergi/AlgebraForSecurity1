@@ -128,13 +128,66 @@ def addition(x, y, radix: int):
     print(z)
     print(custom_decimal_to_radix(z, radix))
 
-x = "6295"
-y = "A825"
+def turn_number_to_modulo(x, modulo: int):
+    w = modulo
+
+    while x> w*w:
+        w = w*w
+
+    w = x - w 
+    print(f"{x} equals {w} mod {modulo}")
+    return w
+
+def modular_subtraction(x, y, modulo):
+    x_modular_representation = turn_number_to_modulo(x, modulo)
+    y_modular_representation = turn_number_to_modulo(y, modulo)
+    z = x - y
+    if z<0:
+        z = modulo + z
+    print(f"the result is {z} mod {modulo}")
+
+def subtraction(x, y, radix: int):
+    #Returns the dif of a and b.
+    c = 0
+
+    #pad the smaller number with 0s to match the larger number in length
+    while(len(x) != len(y)):
+        if len(x) > len(y):
+            y = [0] + y
+        else:
+            x = [0] + x
+    z = [0] * len(x)
+    print(x)
+    print(y)
+
+    #check if y>x and switch the two numbers if that is the case
+    for i in range(0, len(x) - 1):
+        if y[i]>x[i]:
+            w = x
+            x = y
+            y = w
+            break
+        if x[i]>y[i] or x[i]!='0':
+            break
+  
+    #subtract the 2 numbers
+    for i in range(len(x) - 1, -1, -1):
+        if x[i]>=y[i]:
+            z[i] = x[i] - y[i] + c
+        else:
+            z[i] = x[i] - y[i] + c + 10
+            c = -1
+    print(z)
+    print(custom_decimal_to_radix(z, radix))
+
+
+x = "123"
+y = "92"
 
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 
-addition(x,y,16)
+subtraction(x,y,10)
 
 
 
