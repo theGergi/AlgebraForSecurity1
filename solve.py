@@ -180,7 +180,35 @@ def subtraction(x, y, radix: int):
             c = -1
     print(z)
     print(custom_decimal_to_radix(z, radix))
+def extended_gcd(a, b):
+    if not b:
+        return ([1], [0], a)
 
+    x, y, gcd = extended_gcd(b, [a[i] % b[0] for i in range(len(b))])
+    q = [a[i] // b[0] for i in range(len(b))]
+    x, y = y, [x[i] - q[0] * y[i] for i in range(len(b))]
+    
+    print (x, y, gcd)
+
+def extended_euclidean(x, y):
+    x0, x1 = [1], [0]
+    y0, y1 = [0], [1]
+    
+    while len(y) > 0:
+        quotient, remainder = divmod(len(x), len(y))
+        x, y = y, [y[i] % y[0] for i in range(len(y))]
+        x0, x1 = x1, [x0[i] - quotient * x1[i] for i in range(len(x0))]
+        y0, y1 = y1, [y0[i] - quotient * y1[i] for i in range(len(y0))]
+
+    return x0, y0, x
+
+def modular_inverse(x, m):
+    a, b, gcd = extended_gcd(x, [m])
+    
+    if gcd != [1]:
+        raise ValueError(f"The modular inverse does not exist for {x} mod {m}")
+
+    print (a[0] % m)
 
 x = "123"
 y = "92"
