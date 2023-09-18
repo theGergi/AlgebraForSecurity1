@@ -128,7 +128,7 @@ def addition(x, y, radix: int):
     print(z)
     print(custom_decimal_to_radix(z, radix))
 
-def turn_number_to_modulo(x, modulo: int):
+def modular_reduction(x, modulo: int):
     w = modulo
 
     while x> w*w:
@@ -139,12 +139,13 @@ def turn_number_to_modulo(x, modulo: int):
     return w
 
 def modular_subtraction(x, y, modulo):
-    x_modular_representation = turn_number_to_modulo(x, modulo)
-    y_modular_representation = turn_number_to_modulo(y, modulo)
-    z = x - y
+    x_modular_representation = modular_reduction(x, modulo)
+    y_modular_representation = modular_reduction(y, modulo)
+    z = x_modular_representation - y_modular_representation
     if z<0:
         z = modulo + z
     print(f"the result is {z} mod {modulo}")
+
 
 def subtraction(x, y, radix: int):
     #Returns the dif of a and b.
