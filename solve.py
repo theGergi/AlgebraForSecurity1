@@ -201,7 +201,12 @@ def extended_euclidean(x, y):
         y0, y1 = y1, [y0[i] - quotient * y1[i] for i in range(len(y0))]
 
     return x0, y0, x
-
+def extended_gcd(x, y):
+    if y == 0:
+        return (1, 0, x)
+    else:
+        (a, b, d) = extended_gcd(y, x % y)
+        return (b, a - (x // y) * b, d)
 def modular_inverse(x, m):
     a, b, gcd = extended_gcd(x, [m])
     
