@@ -127,6 +127,115 @@ def addition(x, y, radix: int):
             c = 0
     print(z)
     print(custom_decimal_to_radix(z, radix))
+    return z
+
+def bigger_than(x, y):
+    while(len(x) != len(y)):
+        if len(x) > len(y):
+            y = [0] + y
+        else:
+            x = [0] + x
+
+    for i in range(len(x)):
+        if y[i]>x[i]:
+            return False
+        if x[i]>y[i]:
+            return True
+
+def subtraction(x, y, radix: int):
+    #Returns the dif of a and b.
+    c = 0
+
+    #pad the smaller number with 0s to match the larger number in length
+    while(len(x) != len(y)):
+        if len(x) > len(y):
+            y = [0] + y
+        else:
+            x = [0] + x
+    z = [0] * len(x)
+    print(x)
+    print(y)
+
+    #check if y>x and switch the two numbers if that is the case
+    if bigger_than(y, x):
+        x, y = y, x
+
+    #subtract the 2 numbers
+    for i in range(len(x) - 1, -1, -1):
+        if x[i]>=y[i]:
+            z[i] = x[i] - y[i] + c
+            c = 0
+        else:
+            z[i] = x[i] - y[i] + c + radix
+            c = -1
+    print(z)
+    print(custom_decimal_to_radix(z, radix))
+    return z
+
+def multiplication(x, y, radix: int):
+    while(len(x) != len(y)):
+        if len(x) > len(y):
+            y = [0] + y
+        else:
+            x = [0] + x
+    c = 0
+    x = [0] + x
+    y = [0] + y
+    z = [0] * (len(x) ** 2)
+    print(x)
+    print(y)
+    a = 0
+    for i in range(len(x) - 1, -1, -1):
+        inv_i = len(x) - 1 - i
+        mid_z = [0] * (len(x) ** 2)
+        mid_c = 0
+        for j in range(len(y) - 1, -1, -1):
+            inv_j = len(y) - 1 - j
+            a = [0] * (len(x) ** 2)
+            a[len(a) - 1 - inv_j] = x[i] * y[j] + mid_c
+            print(x[i], y[j], a[len(a) - 1 - inv_j], mid_c)
+            if a[len(a) - 1 - inv_j] >= radix:
+                mid_c = a[len(a) - 1 - inv_j] // radix
+                a[len(a) - 1 - inv_j] = a[len(a) - 1 - inv_j] % radix
+            else:
+                mid_c = 0
+            print("A ", a)
+            mid_z = addition(mid_z, a, radix)
+            print("Mid z ", mid_z)
+        print("======================================")
+        mid_z += [0] * inv_i
+        print(mid_z)
+        z = addition(z, mid_z, radix)
+
+    for i in range(len(z) - 1):
+        if z[0] == 0:
+            z = z[1:]
+    print(z)
+    print(custom_decimal_to_radix(z, radix))
+    return z
+
+def modular_reduction_array(x, radix, modulo):
+    modulo = [0] * (len(x) - len(modulo)) + modulo
+    while(bigger_than(x, modulo)):
+        print("X: ", x)
+        y = modulo + [0] * (len(x) - len(modulo))
+        if bigger_than(y, x):
+            y = modulo + [0] * (len(x) - len(modulo) - 1)
+        print("Subtractor:", y)
+        x = subtraction(x, y, radix)
+    print(custom_decimal_to_radix(x, radix))
+    print(x)
+    return x
+    
+def modular_addition(x, y, radix, modulo):
+    x_modular_representation = modular_reduction_array(x, radix, modulo)
+    y_modular_representation = modular_reduction_array(y, radix, modulo)
+    z = addition(x_modular_representation, y_modular_representation, radix)
+    modulo = [0] * (len(z) - len(modulo)) + modulo
+    if bigger_than(z, modulo) or z == modulo:
+        z = subtraction(z, modulo, radix)
+    print(f"the result is {z} mod {modulo}")
+    return z
 
 def modular_reduction(x, modulo: int):
     w = modulo
@@ -147,39 +256,6 @@ def modular_subtraction(x, y, modulo):
     print(f"the result is {z} mod {modulo}")
 
 
-def subtraction(x, y, radix: int):
-    #Returns the dif of a and b.
-    c = 0
-
-    #pad the smaller number with 0s to match the larger number in length
-    while(len(x) != len(y)):
-        if len(x) > len(y):
-            y = [0] + y
-        else:
-            x = [0] + x
-    z = [0] * len(x)
-    print(x)
-    print(y)
-
-    #check if y>x and switch the two numbers if that is the case
-    for i in range(0, len(x) - 1):
-        if y[i]>x[i]:
-            w = x
-            x = y
-            y = w
-            break
-        if x[i]>y[i] or x[i]!='0':
-            break
-  
-    #subtract the 2 numbers
-    for i in range(len(x) - 1, -1, -1):
-        if x[i]>=y[i]:
-            z[i] = x[i] - y[i] + c
-        else:
-            z[i] = x[i] - y[i] + c + 10
-            c = -1
-    print(z)
-    print(custom_decimal_to_radix(z, radix))
 def extended_gcd(a, b):
     if not b:
         return ([1], [0], a)
@@ -215,14 +291,16 @@ def modular_inverse(x, m):
 
     print (a[0] % m)
 
-x = "123"
-y = "92"
-
-x = custom_radix_to_decimal(x, 16)
-y = custom_radix_to_decimal(y, 16)
-
-subtraction(x,y,10)
-
+x = "4A"
+y = "2C"
+modulo = "11"
+x = custom_radix_to_decimal(x, 10)
+y = custom_radix_to_decimal(y, 10)
+modulo = custom_radix_to_decimal(modulo, 10)
+modular_addition(x, y, 16, modulo)
+# subtraction(x,y,10)
+# modular_reduction_array(x, 10, modulo)
+# multiplication(x,y,2)
 
 
     
