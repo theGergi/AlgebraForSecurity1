@@ -213,7 +213,57 @@ def multiplication(x, y, radix: int):
     print(z)
     print(custom_decimal_to_radix(z, radix))
     return z
+    
+def removeLeadingZeros(s):
+    # Find the index of the first non-zero character
+    i = 0
+    while i < len(s) and s[i] == '0':
+        i += 1
 
+    # Slice the string to remove leading zeros
+    return s[i:]
+
+def karatsuba(x, y, radix):
+
+    x=custom_radix_to_decimal(x,radix)
+    y=custom_radix_to_decimal(x,radix)
+
+    if len(x) > len(y):
+        x, y = y, x
+    n1 = len(x)
+    n2 = len(y)
+    while n2 > n1:
+        x = "0" + x
+        n1 += 1
+    if n1 == 1:
+        ans = int(x) * int(y)
+        return str(ans)
+    if n1 % 2 == 1:
+        n1 += 1
+        x = "0" + x
+        y = "0" + y
+    xl = ""
+    xr = ""
+    yl = ""
+    yr = ""
+    for i in range(n1 // 2):
+        xl += x[i]
+        yl += y[i]
+        xr += x[n1 // 2 + i]
+        yr += y[n1 // 2 + i]
+    p = karatsuba(xl, yl)
+    q = karatsuba(xr, yr)
+    r = subtraction(
+        karatsuba(addition(xl, xr),
+                 addition(yl, yr)),
+        addition(p, q))
+    for i in range(n1):
+        p = p + "0"
+    for i in range(n1 // 2):
+        r = r + "0"
+    ans = addition(p, addition(q, r))
+    ans = removeLeadingZeros(ans)
+    return ans
 def modular_reduction_array(x, radix, modulo):
     modulo = [0] * (len(x) - len(modulo)) + modulo
     while(bigger_than(x, modulo)):
