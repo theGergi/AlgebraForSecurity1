@@ -213,7 +213,57 @@ def multiplication(x, y, radix: int):
     print(z)
     print(custom_decimal_to_radix(z, radix))
     return z
+    
+def removeLeadingZeros(s):
+    # Find the index of the first non-zero character
+    i = 0
+    while i < len(s) and s[i] == '0':
+        i += 1
 
+    # Slice the string to remove leading zeros
+    return s[i:]
+
+def karatsuba(x, y, radix):
+
+    x=custom_radix_to_decimal(x,radix)
+    y=custom_radix_to_decimal(x,radix)
+
+    if len(x) > len(y):
+        x, y = y, x
+    n1 = len(x)
+    n2 = len(y)
+    while n2 > n1:
+        x = "0" + x
+        n1 += 1
+    if n1 == 1:
+        ans = int(x) * int(y)
+        return str(ans)
+    if n1 % 2 == 1:
+        n1 += 1
+        x = "0" + x
+        y = "0" + y
+    xl = ""
+    xr = ""
+    yl = ""
+    yr = ""
+    for i in range(n1 // 2):
+        xl += x[i]
+        yl += y[i]
+        xr += x[n1 // 2 + i]
+        yr += y[n1 // 2 + i]
+    p = karatsuba(xl, yl)
+    q = karatsuba(xr, yr)
+    r = subtraction(
+        karatsuba(addition(xl, xr),
+                 addition(yl, yr)),
+        addition(p, q))
+    for i in range(n1):
+        p = p + "0"
+    for i in range(n1 // 2):
+        r = r + "0"
+    ans = addition(p, addition(q, r))
+    ans = removeLeadingZeros(ans)
+    return ans
 def modular_reduction_array(x, radix, modulo):
     modulo = [0] * (len(x) - len(modulo)) + modulo
     while(bigger_than(x, modulo)):
@@ -256,40 +306,42 @@ def modular_subtraction(x, y, modulo):
     print(f"the result is {z} mod {modulo}")
 
 
+def is_zero(num):
+    return all(digit == 0 for digit in num)
+
+def mod(a, b):
+    while bigger_than(a, b):
+        a = subtraction(a, b,10)
+    return a
+
+def gcd(a, b):
+    while not is_zero(b):
+        a, b = b, mod(a, b)
+    return a
+
 def extended_gcd(a, b):
-    if not b:
-        return ([1], [0], a)
+    x0, x1, y0, y1 = [1], [0], [0], [1]
 
-    x, y, gcd = extended_gcd(b, [a[i] % b[0] for i in range(len(b))])
-    q = [a[i] // b[0] for i in range(len(b))]
-    x, y = y, [x[i] - q[0] * y[i] for i in range(len(b))]
+    while len(b) > 0:
+        quotient, a, b = mod(a, b)  # Perform division and get quotient
+
+        x0, x1 = x1, subtraction(x0, multiplication(x1, quotient,10))
+        y0, y1 = y1, subtraction(y0, multiplication(y1, quotient,10))
+
+    return a, x0, y0
+
+
+def modular_inverse(a, m):
+    gcd, x, y = extended_gcd(a, m)
     
-    print (x, y, gcd)
-
-def extended_euclidean(x, y):
-    x0, x1 = [1], [0]
-    y0, y1 = [0], [1]
-    
-    while len(y) > 0:
-        quotient, remainder = divmod(len(x), len(y))
-        x, y = y, [y[i] % y[0] for i in range(len(y))]
-        x0, x1 = x1, [x0[i] - quotient * x1[i] for i in range(len(x0))]
-        y0, y1 = y1, [y0[i] - quotient * y1[i] for i in range(len(y0))]
-
-    return x0, y0, x
-def extended_gcd(x, y):
-    if y == 0:
-        return (1, 0, x)
+    if not is_zero(gcd) and gcd[-1] == 1:
+        if len(x) > 1:
+            raise ValueError("Modular inverse does not exist.")
+        else:
+            inverse = x[0] % m[-1]
+            return inverse
     else:
-        (a, b, d) = extended_gcd(y, x % y)
-        return (b, a - (x // y) * b, d)
-def modular_inverse(x, m):
-    a, b, gcd = extended_gcd(x, [m])
-    
-    if gcd != [1]:
-        raise ValueError(f"The modular inverse does not exist for {x} mod {m}")
-
-    print (a[0] % m)
+        raise ValueError("Modular inverse does not exist.")
 
 x = "4A"
 y = "2C"
