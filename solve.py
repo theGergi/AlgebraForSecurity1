@@ -112,17 +112,65 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # et cetera
     else: # exercise["type"] == "modular_arithmetic"
         modulo = custom_radix_to_decimal(exercise["modulus"], radix)
-        print(modulo)
         if modulo[0] == 0:
             output = None
         # Check what operation within the modular arithmetic operations we need to solve
         elif exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
-            output = modular_reduction_array(x, radix, modulo)
+            output = modular_reduction_array(x, modulo, radix)
             output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "addition":
-            output = modular_addition(x, y, radix, modulo)
-            output = custom_decimal_to_radix(output, radix)
+            x = modular_reduction_array(x, modulo, radix)
+            y = modular_reduction_array(y, modulo, radix)
+            if x_negative and y_negative:
+                output = modular_addition(x, y, modulo, radix)
+                output = custom_decimal_to_radix(output, radix)
+                output = "-" + output
+            elif x_negative and not y_negative:
+                if bigger_than(x, y):
+                    output = modular_subtraction(x, y, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                    output = "-" + output
+                else:
+                    output = modular_subtraction(y, x, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+            elif not x_negative and y_negative:
+                if bigger_than(x, y):
+                    output = modular_subtraction(x, y, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                else:
+                    output = modular_subtraction(y, x, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                    output = "-" + output
+            else:
+                output = modular_addition(x, y, modulo, radix)
+                output = custom_decimal_to_radix(output, radix)
+        elif exercise["operation"] == "subtraction":
+            x = modular_reduction_array(x, modulo, radix)
+            y = modular_reduction_array(y, modulo, radix)
+            if not x_negative and y_negative:
+                output = modular_addition(x, y, modulo, radix)
+                output = custom_decimal_to_radix(output, radix)
+            elif x_negative and not y_negative:
+                output = modular_addition(x, y, modulo, radix)
+                output = custom_decimal_to_radix(output, radix)
+                output = "-" + output
+            elif x_negative and y_negative:
+                if bigger_than(x, y):
+                    output = modular_subtraction(x, y, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                    output = "-" + output
+                else:
+                    output = modular_subtraction(y, x, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+            else:
+                if bigger_than(x, y):
+                    output = modular_subtraction(x, y, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                else:
+                    output = modular_subtraction(y, x, modulo, radix)
+                    output = custom_decimal_to_radix(output, radix)
+                    output = "-" + output
         # et cetera
     if exercise["operation"] != "extended_euclidean_algorithm":
         if output is None:
@@ -365,7 +413,8 @@ def karatsuba(x, y, radix):
     ans = addition(p, addition(q, r))
     ans = removeLeadingZeros(ans)
     return ans
-def modular_reduction_array(x, radix, modulo):
+
+def modular_reduction_array(x, modulo, radix):
     modulo = [0] * (len(x) - len(modulo)) + modulo
     while(bigger_than(x, modulo)):
         # print("X: ", x)
@@ -378,9 +427,9 @@ def modular_reduction_array(x, radix, modulo):
     print(x)
     return x
     
-def modular_addition(x, y, radix, modulo):
-    x_modular_representation = modular_reduction_array(x, radix, modulo)
-    y_modular_representation = modular_reduction_array(y, radix, modulo)
+def modular_addition(x, y, modulo, radix):
+    x_modular_representation = modular_reduction_array(x, modulo, radix)
+    y_modular_representation = modular_reduction_array(y, modulo, radix)
     z = addition(x_modular_representation, y_modular_representation, radix)
     modulo = [0] * (len(z) - len(modulo)) + modulo
     if bigger_than(z, modulo) or z == modulo:
@@ -398,13 +447,15 @@ def modular_reduction(x, modulo: int):
     print(f"{x} equals {w} mod {modulo}")
     return w
 
-def modular_subtraction(x, y, modulo):
-    x_modular_representation = modular_reduction(x, modulo)
-    y_modular_representation = modular_reduction(y, modulo)
-    z = x_modular_representation - y_modular_representation
-    if z<0:
-        z = modulo + z
+def modular_subtraction(x, y, modulo, radix):
+    x_modular_representation = modular_reduction_array(x, modulo, radix)
+    y_modular_representation = modular_reduction_array(y, modulo, radix)
+    z = subtraction(x_modular_representation, y_modular_representation, radix)
+    
+    if bigger_than([0], z) or z == modulo:
+        z = addition(z, modulo, radix)
     print(f"the result is {z} mod {modulo}")
+    return z
 
 
 def is_zero(num):
@@ -444,21 +495,25 @@ def modular_inverse(a, m):
     else:
         raise ValueError("Modular inverse does not exist.")
 
-x = "4A"
-y = "2C"
-modulo = "11"
-x = custom_radix_to_decimal(x, 10)
-y = custom_radix_to_decimal(y, 10)
-modulo = custom_radix_to_decimal(modulo, 10)
-modular_addition(x, y, 16, modulo)
+x = "312"
+y = "1023"
+modulo = "1022"
+x = custom_radix_to_decimal(x, 4)
+y = custom_radix_to_decimal(y, 4)
+modulo = custom_radix_to_decimal(modulo, 4)
+# modular_subtraction(x, y, modulo, 4)
 
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
 run_tests()
 
-# subtraction(x,y,10)
-# modular_reduction_array(x, 10, modulo)
-# multiplication(x,y,2)
+# # subtraction(x,y,10)
+# # modular_reduction_array(x, 10, modulo)
+# # multiplication(x,y,2)
+# "radix": 4,
+#     "x": "312",
+#     "y": "1023",
+#     "modulus": "1022",
 
-
+# # modular(subtraction())
     
