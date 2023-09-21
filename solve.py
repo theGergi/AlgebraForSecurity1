@@ -363,55 +363,108 @@ def multiplication_primary(x, y, radix: int):
     print(custom_decimal_to_radix(z, radix))
     return z
     
-def removeLeadingZeros(s):
-    # Find the index of the first non-zero character
-    i = 0
-    while i < len(s) and s[i] == '0':
-        i += 1
+def find_sum(str1, str2,radix:int):
+    if len(str1) > len(str2):
+        str1, str2 = str2, str1
 
-    # Slice the string to remove leading zeros
-    return s[i:]
+    str1 = str1[::-1]
+    str2 = str2[::-1]
 
-def karatsuba(x, y, radix):
+    n1 = len(str1)
+    n2 = len(str2)
 
-    x=custom_radix_to_decimal(x,radix)
-    y=custom_radix_to_decimal(x,radix)
+    carry = 0
+    result = []
 
-    if len(x) > len(y):
-        x, y = y, x
-    n1 = len(x)
-    n2 = len(y)
+    for i in range(n1):
+        sum_digit = int(str1[i]) + int(str2[i]) + carry
+        result.append(str(sum_digit % radix))
+        carry = sum_digit // radix
+
+    for i in range(n1, n2):
+        sum_digit = int(str2[i]) + carry
+        result.append(str(sum_digit % radix))
+        carry = sum_digit // radix
+
+    if carry:
+        result.append(str(carry))
+
+    result.reverse()
+    return ''.join(result)
+
+def find_diff(str1, str2,radix:int):
+    str1 = str1[::-1]
+    str2 = str2[::-1]
+
+    n1 = len(str1)
+    n2 = len(str2)
+
+    carry = 0
+    result = []
+
+    for i in range(n2):
+        sub = int(str1[i]) - int(str2[i]) - carry
+        if sub < 0:
+            sub += radix
+            carry = 1
+        else:
+            carry = 0
+        result.append(str(sub))
+
+    for i in range(n2, n1):
+        sub = int(str1[i]) - carry
+        if sub < 0:
+            sub += radix
+            carry = 1
+        else:
+            carry = 0
+        result.append(str(sub))
+
+    result.reverse()
+    return ''.join(result)
+
+def remove_leading_zeros(string):
+    while len(string) > 1 and string[0] == '0':
+        string = string[1:]
+    return string
+
+def karatsuba(A, B,radix:int):
+    if len(A) > len(B):
+        A, B = B, A
+
+    n1 = len(A)
+    n2 = len(B)
+
     while n2 > n1:
-        x = "0" + x
+        A = '0' + A
         n1 += 1
+
     if n1 == 1:
-        ans = int(x) * int(y)
+        ans = int(A) * int(B)
         return str(ans)
+
     if n1 % 2 == 1:
         n1 += 1
-        x = "0" + x
-        y = "0" + y
-    xl = ""
-    xr = ""
-    yl = ""
-    yr = ""
-    for i in range(n1 // 2):
-        xl += x[i]
-        yl += y[i]
-        xr += x[n1 // 2 + i]
-        yr += y[n1 // 2 + i]
-    p = karatsuba(xl, yl)
-    q = karatsuba(xr, yr)
-    r = subtraction(
-        karatsuba(addition(xl, xr),
-                 addition(yl, yr)),
-        addition(p, q))
+        A = '0' + A
+        B = '0' + B
+
+    Al = A[:n1 // 2]
+    Ar = A[n1 // 2:]
+    Bl = B[:n1 // 2]
+    Br = B[n1 // 2:]
+
+    p = karatsuba(Al, Bl, radix)
+    q = karatsuba(Ar, Br, radix)
+    r = find_diff(karatsuba(find_sum(Al, Ar, radix), find_sum(Bl, Br, radix),radix), find_sum(p, q, radix), radix)
+
     for i in range(n1):
-        p = p + "0"
+        p += '0'
     for i in range(n1 // 2):
-        r = r + "0"
-    ans = addition(p, addition(q, r))
-    ans = removeLeadingZeros(ans)
+        r += '0'
+
+    ans = find_sum(p, find_sum(q, r,radix),radix)
+    ans = remove_leading_zeros(ans)
+
     return ans
 
 def modular_reduction_array(x, modulo, radix):
