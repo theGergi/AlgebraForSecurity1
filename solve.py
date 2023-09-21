@@ -426,8 +426,8 @@ def extended_gcd(a, b):
     while len(b) > 0:
         quotient, a, b = mod(a, b)  # Perform division and get quotient
 
-        x0, x1 = x1, subtraction(x0, multiplication(x1, quotient,10))
-        y0, y1 = y1, subtraction(y0, multiplication(y1, quotient,10))
+        x0, x1 = x1, subtraction(x0, multiplication_primary(x1, quotient,10))
+        y0, y1 = y1, subtraction(y0, multiplication_primary(y1, quotient,10))
 
     return a, x0, y0
 
