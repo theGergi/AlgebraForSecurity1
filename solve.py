@@ -529,6 +529,7 @@ def div(a, b):
         nr=nr+1
     if(is_zero(subtraction(a,b,10))):
         a = subtraction(a, b, 10)
+        nr=nr+1
     nr=str(nr)
     nr=custom_radix_to_decimal(nr, 10)
     return nr
@@ -553,18 +554,14 @@ def extended_gcd(a, b):
     return gcd, x, y
 
 
-
 def modular_inverse(a, m):
     gcd, x, y = extended_gcd(a, m)
     
-    if not is_zero(gcd) and gcd[-1] == 1:
-        if len(x) > 1:
-            raise ValueError("Modular inverse does not exist.")
-        else:
-            inverse = x[0] % m[-1]
-            return inverse
-    else:
+    if is_zero(gcd):
         raise ValueError("Modular inverse does not exist.")
+    
+    inverse = mod(x, m)  # Calculate the modular inverse using your mod function
+    return inverse
 
 x = "312"
 y = "1023"
