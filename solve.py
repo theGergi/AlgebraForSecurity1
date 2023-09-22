@@ -515,25 +515,43 @@ def is_zero(num):
     return all(digit == 0 for digit in num)
 
 def mod(a, b):
+    nr=0
     while bigger_than(a, b):
-        a = subtraction(a, b,10)
+        a = subtraction(a, b, 10)
+    if(is_zero(subtraction(a,b,10))):
+        a = subtraction(a, b, 10)
     return a
 
+def div(a, b):
+    nr = 0
+    while bigger_than(a, b):
+        a = subtraction(a, b, 10)
+        nr=nr+1
+    if(is_zero(subtraction(a,b,10))):
+        a = subtraction(a, b, 10)
+    nr=str(nr)
+    nr=custom_radix_to_decimal(nr, 10)
+    return nr
+
 def gcd(a, b):
-    while not is_zero(b):
+    while is_zero(b) == False:
         a, b = b, mod(a, b)
     return a
 
+
+
 def extended_gcd(a, b):
-    x0, x1, y0, y1 = [1], [0], [0], [1]
+    if is_zero(a):
+        return b, [0], [1]
 
-    while len(b) > 0:
-        quotient, a, b = mod(a, b)  # Perform division and get quotient
+    gcd, x1, y1 = extended_gcd(mod(b, a), a)
 
-        x0, x1 = x1, subtraction(x0, multiplication_primary(x1, quotient,10))
-        y0, y1 = y1, subtraction(y0, multiplication_primary(y1, quotient,10))
+    r = div(b, a)
+    x = subtraction(y1, multiplication(r, x1, 10), 10)
+    y = x1
 
-    return a, x0, y0
+    return gcd, x, y
+
 
 
 def modular_inverse(a, m):
