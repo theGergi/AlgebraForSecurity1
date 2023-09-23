@@ -55,53 +55,15 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Check what operation within the integer arithmetic operations we need to solve
         if exercise["operation"] == "addition":
             # Solve integer arithmetic addition exercise
-            if x_negative and y_negative:
-                output = addition(x, y, radix)
-                output = custom_decimal_to_radix(output, radix)
+            output, negative = addition_with_negative(x,y,radix,x_negative, y_negative)
+            output = custom_decimal_to_radix(output, radix)
+            if negative:
                 output = "-" + output
-            elif x_negative and not y_negative:
-                if bigger_than(x, y):
-                    output = subtraction(x, y, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
-                else:
-                    output = subtraction(y, x, radix)
-                    output = custom_decimal_to_radix(output, radix)
-            elif not x_negative and y_negative:
-                if bigger_than(x, y):
-                    output = subtraction(x, y, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                else:
-                    output = subtraction(y, x, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
-            else:
-                output = addition(x, y, radix)
-                output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "subtraction":
-            if not x_negative and y_negative:
-                output = addition(x, y, radix)
-                output = custom_decimal_to_radix(output, radix)
-            elif x_negative and not y_negative:
-                output = addition(x, y, radix)
-                output = custom_decimal_to_radix(output, radix)
+            output, negative = subtraction_with_negative(x,y,radix,x_negative, y_negative)
+            output = custom_decimal_to_radix(output, radix)
+            if negative:
                 output = "-" + output
-            elif x_negative and y_negative:
-                if bigger_than(x, y):
-                    output = subtraction(x, y, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
-                else:
-                    output = subtraction(y, x, radix)
-                    output = custom_decimal_to_radix(output, radix)
-            else:
-                if bigger_than(x, y):
-                    output = subtraction(x, y, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                else:
-                    output = subtraction(y, x, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
         elif exercise["operation"] == "multiplication_primary":
             output = multiplication_primary(x, y, radix)
             output = custom_decimal_to_radix(output, radix)
@@ -212,24 +174,22 @@ def run_tests():
 
 
 
-x = "312"
-y = "1023"
+x = "131"
+y = "130"
 modulo = "1022"
-x = custom_radix_to_decimal(x, 4)
-y = custom_radix_to_decimal(y, 4)
-modulo = custom_radix_to_decimal(modulo, 4)
-# modular_subtraction(x, y, modulo, 4)
 
+# x = "10"
+# y = "20"
+x = custom_radix_to_decimal(x, 16)
+y = custom_radix_to_decimal(y, 16)
+modulo = custom_radix_to_decimal(modulo, 16)
+# modular_subtraction(x, y, modulo, 4)
+# print(subtraction(x, y, 4, False, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
 run_tests()
 
-# # subtraction(x,y,10)
-# # modular_reduction_array(x, 10, modulo)
-# # multiplication(x,y,2)
-# "radix": 4,
-#     "x": "312",
-#     "y": "1023",
-#     "modulus": "1022",
+
+# print(extended_gcd(x,y,True, True, 10))
 
 # # modular(subtraction())

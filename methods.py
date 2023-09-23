@@ -1,156 +1,5 @@
-
-def custom_radix_to_decimal(number_str, radix):
-    
-    if not 2 <= radix <= 16:
-        raise ValueError("Radix must be between 2 and 16.")
-
-    decimal_notation = []
-    power = 0
-
-    for digit in number_str:
-        if '0' <= digit <= '9':
-            digit_value = ord(digit) - ord('0')
-        else:
-            digit_value = ord(digit.upper()) - ord('A') + 10
-
-        decimal_notation.append(digit_value)
-        power += 1
-
-    return decimal_notation
-
-
-def custom_decimal_to_radix(number_arr, radix):
-    if number_arr is None:
-        return number_arr
-
-    if not 2 <= radix <= 16:
-        raise ValueError("Radix must be between 2 and 16.")
-
-    radix_notation = ""
-    power = 0
-
-    for digit in number_arr:
-        if 0 <= digit <= 9:
-            digit_value = chr(digit + ord('0'))
-        else:
-            digit_value = chr(digit - 10 + ord('A'))
-
-        radix_notation += digit_value
-        power += 1
-
-    return remove_leading_zeros(radix_notation)
-
-def addition(x, y, radix: int):
-    """
-    Returns the sum of a and b.
-    """
-    c = 0
-
-    while(len(x) != len(y)):
-        if len(x) > len(y):
-            y = [0] + y
-        else:
-            x = [0] + x
-    x = [0] + x
-    y = [0] + y
-    z = [0] * len(x)
-    # print(x)
-    # print(y)
-    for i in range(len(x) - 1, -1, -1):
-        z[i] = x[i] + y[i] + c
-        if z[i] >= radix:
-            z[i] = z[i] - radix
-            c = 1
-        else:
-            c = 0
-    # print(z)
-    # print(custom_decimal_to_radix(z, radix))
-    return z
-
-def bigger_than(x, y):
-    while(len(x) != len(y)):
-        if len(x) > len(y):
-            y = [0] + y
-        else:
-            x = [0] + x
-
-    for i in range(len(x)):
-        if y[i]>x[i]:
-            return False
-        if x[i]>y[i]:
-            return True
-
-def subtraction(x, y, radix: int):
-    #Returns the dif of a and b.
-    c = 0
-
-    #pad the smaller number with 0s to match the larger number in length
-    while(len(x) != len(y)):
-        if len(x) > len(y):
-            y = [0] + y
-        else:
-            x = [0] + x
-    z = [0] * len(x)
-    # print(x)
-    # print(y)
-
-    #check if y>x and switch the two numbers if that is the case
-    if bigger_than(y, x):
-        x, y = y, x
-
-    #subtract the 2 numbers
-    for i in range(len(x) - 1, -1, -1):
-        if x[i]>=y[i]:
-            z[i] = x[i] - y[i] + c
-            c = 0
-        else:
-            z[i] = x[i] - y[i] + c + radix
-            c = -1
-    print(z)
-    print(custom_decimal_to_radix(z, radix))
-    return z
-
-def multiplication_primary(x, y, radix: int):
-    while(len(x) != len(y)):
-        if len(x) > len(y):
-            y = [0] + y
-        else:
-            x = [0] + x
-    c = 0
-    x = [0] + x
-    y = [0] + y
-    z = [0] * (len(x) ** 2)
-    # print(x)
-    # print(y)
-    a = 0
-    for i in range(len(x) - 1, -1, -1):
-        inv_i = len(x) - 1 - i
-        mid_z = [0] * (len(x) ** 2)
-        mid_c = 0
-        for j in range(len(y) - 1, -1, -1):
-            inv_j = len(y) - 1 - j
-            a = [0] * (len(x) ** 2)
-            a[len(a) - 1 - inv_j] = x[i] * y[j] + mid_c
-            # print(x[i], y[j], a[len(a) - 1 - inv_j], mid_c)
-            if a[len(a) - 1 - inv_j] >= radix:
-                mid_c = a[len(a) - 1 - inv_j] // radix
-                a[len(a) - 1 - inv_j] = a[len(a) - 1 - inv_j] % radix
-            else:
-                mid_c = 0
-            # print("A ", a)
-            mid_z = addition(mid_z, a, radix)
-            # print("Mid z ", mid_z)
-        # print("======================================")
-        mid_z += [0] * inv_i
-        # print(mid_z)
-        z = addition(z, mid_z, radix)
-
-    for i in range(len(z) - 1):
-        if z[0] == 0:
-            z = z[1:]
-    print(z)
-    print(custom_decimal_to_radix(z, radix))
-    return z
+from helper_methods import *
+from integer_arithmetic import *
     
 def find_sum(str1, str2,radix:int):
     if len(str1) > len(str2):
@@ -211,11 +60,6 @@ def find_diff(str1, str2,radix:int):
 
     result.reverse()
     return ''.join(result)
-
-def remove_leading_zeros(string):
-    while len(string) > 1 and string[0] == '0':
-        string = string[1:]
-    return string
 
 def karatsuba(A, B,radix:int):
     if len(A) > len(B):
@@ -300,56 +144,51 @@ def modular_subtraction(x, y, modulo, radix):
     return z
 
 
-def is_zero(num):
-    return all(digit == 0 for digit in num)
-
-def mod(a, b):
+def mod(a, b, radix):
     nr=0
     while bigger_than(a, b):
-        a = subtraction(a, b, 10)
-    if(is_zero(subtraction(a,b,10))):
-        a = subtraction(a, b, 10)
+        a = subtraction(a, b, radix)
+    if(is_zero(subtraction(a,b, radix))):
+        a = subtraction(a, b, radix)
     return a
 
-def div(a, b):
+def div(a, b, radix):
     nr = 0
     while bigger_than(a, b):
-        a = subtraction(a, b, 10)
+        a = subtraction(a, b, radix)
         nr=nr+1
-    if(is_zero(subtraction(a,b,10))):
-        a = subtraction(a, b, 10)
+    if(is_zero(subtraction(a, b, radix))):
+        a = subtraction(a, b, radix)
         nr=nr+1
     nr=str(nr)
-    nr=custom_radix_to_decimal(nr, 10)
+    nr=custom_radix_to_decimal(nr, radix)
     return nr
 
-def gcd(a, b):
+def gcd(a, b, radix):
     while is_zero(b) == False:
-        a, b = b, mod(a, b)
+        a, b = b, mod(a, b, radix)
     return a
 
 
 
-def extended_gcd(a, b):
+def extended_gcd(a, b, a_sign, b_sign, radix):
     if is_zero(a):
-        return b, [0], [1]
+        return b, [0], [1], True, True
+    mod_ab = mod(b, a, radix)
+    gcd, x1, y1, x_sign, y_sign = extended_gcd(mod_ab, a, True, True, radix)
 
-    gcd, x1, y1 = extended_gcd(mod(b, a), a)
-
-    r = div(b, a)
-    x = subtraction(y1, multiplication_primary(r, x1, 10), 10)
+    r = div(b, a, radix)
+    x = subtraction(y1, multiplication_primary(r, x1, radix), radix)
     y = x1
 
-    return gcd, x, y
+    return gcd, x, y, True, True
 
 
-def modular_inverse(a, m):
-    gcd, x, y = extended_gcd(a, m)
+def modular_inverse(a, m, radix):
+    gcd, x, y = extended_gcd(a, m, radix)
     
     if is_zero(gcd):
         raise ValueError("Modular inverse does not exist.")
     
-    inverse = mod(x, m)  # Calculate the modular inverse using your mod function
+    inverse = mod(x, m, radix)  # Calculate the modular inverse using your mod function
     return inverse
-
-    
