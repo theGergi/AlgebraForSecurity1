@@ -102,15 +102,13 @@ def karatsuba(A, B,radix:int):
 
 def modular_reduction_array(x, modulo, radix):
     modulo = [0] * (len(x) - len(modulo)) + modulo
-    while(bigger_than(x, modulo)):
+    while(bigger_than(x, modulo) or x == modulo):
         # print("X: ", x)
         y = modulo + [0] * (len(x) - len(modulo))
         if bigger_than(y, x):
             y = modulo + [0] * (len(x) - len(modulo) - 1)
         # print("Subtractor:", y)
         x = subtraction(x, y, radix)
-    print(custom_decimal_to_radix(x, radix))
-    print(x)
     return x
     
 def modular_addition(x, y, modulo, radix):
@@ -122,16 +120,6 @@ def modular_addition(x, y, modulo, radix):
         z = subtraction(z, modulo, radix)
     print(f"the result is {z} mod {modulo}")
     return z
-
-def modular_reduction(x, modulo: int):
-    w = modulo
-
-    while x> w*w:
-        w = w*w
-
-    w = x - w 
-    print(f"{x} equals {w} mod {modulo}")
-    return w
 
 def modular_subtraction(x, y, modulo, radix):
     x_modular_representation = modular_reduction_array(x, modulo, radix)
