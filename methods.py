@@ -1,6 +1,7 @@
 from helper_methods import *
 from integer_arithmetic import *
-    
+from modular_arithmetic import *
+
 def find_sum(str1, str2,radix:int):
     if len(str1) > len(str2):
         str1, str2 = str2, str1
@@ -99,38 +100,6 @@ def karatsuba(A, B,radix:int):
     ans = remove_leading_zeros(ans)
 
     return ans
-
-def modular_reduction_array(x, modulo, radix):
-    modulo = [0] * (len(x) - len(modulo)) + modulo
-    while(bigger_than(x, modulo) or x == modulo):
-        # print("X: ", x)
-        y = modulo + [0] * (len(x) - len(modulo))
-        if bigger_than(y, x):
-            y = modulo + [0] * (len(x) - len(modulo) - 1)
-        # print("Subtractor:", y)
-        x = subtraction(x, y, radix)
-    return x
-    
-def modular_addition(x, y, modulo, radix):
-    x_modular_representation = modular_reduction_array(x, modulo, radix)
-    y_modular_representation = modular_reduction_array(y, modulo, radix)
-    z = addition(x_modular_representation, y_modular_representation, radix)
-    modulo = [0] * (len(z) - len(modulo)) + modulo
-    if bigger_than(z, modulo) or z == modulo:
-        z = subtraction(z, modulo, radix)
-    print(f"the result is {z} mod {modulo}")
-    return z
-
-def modular_subtraction(x, y, modulo, radix):
-    x_modular_representation = modular_reduction_array(x, modulo, radix)
-    y_modular_representation = modular_reduction_array(y, modulo, radix)
-    z = subtraction(x_modular_representation, y_modular_representation, radix)
-    
-    if bigger_than([0], z) or z == modulo:
-        z = addition(z, modulo, radix)
-    print(f"the result is {z} mod {modulo}")
-    return z
-
 
 def mod(a, b, radix, a_negative, b_negative):
     nr=0

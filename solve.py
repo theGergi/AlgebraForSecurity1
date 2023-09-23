@@ -92,11 +92,11 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Check what operation within the modular arithmetic operations we need to solve
         elif exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
-            output = modular_reduction_array(x, modulo, radix)
+            output = modular_reduction(x, modulo, radix)
             output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "addition":
-            x = modular_reduction_array(x, modulo, radix)
-            y = modular_reduction_array(y, modulo, radix)
+            x = modular_reduction(x, modulo, radix)
+            y = modular_reduction(y, modulo, radix)
             if x_negative and y_negative:
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
@@ -121,8 +121,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "subtraction":
-            x = modular_reduction_array(x, modulo, radix)
-            y = modular_reduction_array(y, modulo, radix)
+            x = modular_reduction(x, modulo, radix)
+            y = modular_reduction(y, modulo, radix)
             if not x_negative and y_negative:
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
@@ -192,14 +192,15 @@ def run_tests():
 
 x = "13"
 y = "13"
-modulo = "133"
+modulo = "8"
 
-x = "133"
-y = "133"
+x = "30"
+y = "15"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 7)
-print(modular_reduction_array(x, modulo, 4))
+# print(modular_reduction(x, modulo, 4))
+print(modular_multiplication(x,y,modulo,10))
 # print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
