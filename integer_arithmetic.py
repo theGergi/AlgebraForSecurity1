@@ -27,6 +27,23 @@ def addition(x, y, radix: int):
     # print(custom_decimal_to_radix(z, radix))
     return z
 
+def addition_with_negative(x, y, radix, x_negative = False, y_negative = False):
+    # Solve integer arithmetic addition exercise
+    if x_negative and y_negative:
+        return addition(x, y, radix), True
+    elif x_negative and not y_negative:
+        if bigger_than(x, y):
+            return subtraction(x, y, radix), True
+        else:
+            return subtraction(y, x, radix), False
+    elif not x_negative and y_negative:
+        if bigger_than(x, y):
+            return subtraction(x, y, radix), False
+        else:
+            return subtraction(y, x, radix), True
+    else:
+        return addition(x, y, radix), False
+    
 def subtraction(x, y, radix: int):
     #Returns the dif of a and b.
     c = 0
@@ -53,27 +70,9 @@ def subtraction(x, y, radix: int):
         else:
             z[i] = x[i] - y[i] + c + radix
             c = -1
-    print(z)
-    print(custom_decimal_to_radix(z, radix))
+    # print(z)
+    # print(custom_decimal_to_radix(z, radix))
     return z
-
-def addition_with_negative(x, y, radix, x_negative = False, y_negative = False):
-    # Solve integer arithmetic addition exercise
-    if x_negative and y_negative:
-        return addition(x, y, radix), True
-    elif x_negative and not y_negative:
-        if bigger_than(x, y):
-            return subtraction(x, y, radix), True
-        else:
-            return subtraction(y, x, radix), False
-    elif not x_negative and y_negative:
-        if bigger_than(x, y):
-            return subtraction(x, y, radix), False
-        else:
-            return subtraction(y, x, radix), True
-    else:
-        return addition(x, y, radix), False
-
 
 def subtraction_with_negative(x, y, radix, x_negative = False, y_negative = False):
     if not x_negative and y_negative:
@@ -116,7 +115,7 @@ def multiplication_primary(x, y, radix: int):
             else:
                 mid_c = 0
             # print("A ", a)
-            print(mid_z, a)
+            # print(mid_z, a)
             mid_z = addition(mid_z, a, radix)
             # print("Mid z ", mid_z)
         # print("======================================")
@@ -127,6 +126,14 @@ def multiplication_primary(x, y, radix: int):
     for i in range(len(z) - 1):
         if z[0] == 0:
             z = z[1:]
-    print(z)
-    print(custom_decimal_to_radix(z, radix))
+    # print(z)
+    # print(custom_decimal_to_radix(z, radix))
     return z
+
+def multiplication_primary_with_negative(x, y, radix, x_negative = False, y_negative = False):
+    z = multiplication_primary(x, y, radix)
+
+    if x_negative != y_negative:
+        return z, True
+    else:
+        return z, False

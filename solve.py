@@ -174,22 +174,22 @@ def run_tests():
 
 
 
-x = "131"
-y = "130"
+x = "13"
+y = "13"
 modulo = "1022"
 
-# x = "10"
-# y = "20"
+x = "25"
+y = "10"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 16)
 # modular_subtraction(x, y, modulo, 4)
-# print(subtraction(x, y, 4, False, False))
+# print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-run_tests()
+# run_tests()
 
 
-# print(extended_gcd(x,y,True, True, 10))
+print(extended_gcd(x,y, 10,False, False))
 
 # # modular(subtraction())
