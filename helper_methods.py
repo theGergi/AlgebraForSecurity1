@@ -1,3 +1,9 @@
+def add_minus(x):
+    if x != "0":
+        return "-" + x
+    else:
+        return x
+
 def is_zero(num):
     return all(digit == 0 for digit in num)
 

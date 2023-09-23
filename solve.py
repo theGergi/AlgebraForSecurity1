@@ -58,19 +58,32 @@ def solve_exercise(exercise_location : str, answer_location : str):
             output, negative = addition_with_negative(x,y,radix,x_negative, y_negative)
             output = custom_decimal_to_radix(output, radix)
             if negative:
-                output = "-" + output
+                output = add_minus(output)
         elif exercise["operation"] == "subtraction":
             output, negative = subtraction_with_negative(x,y,radix,x_negative, y_negative)
             output = custom_decimal_to_radix(output, radix)
             if negative:
-                output = "-" + output
+                output = add_minus(output)
         elif exercise["operation"] == "multiplication_primary":
             output = multiplication_primary(x, y, radix)
             output = custom_decimal_to_radix(output, radix)
             if x_negative != y_negative:
-                output = "-" + output
+                output = add_minus(output)
         elif exercise["operation"] == "extended_euclidean_algorithm":
             output = ["","",""]
+            if bigger_than(x, y):
+                gcd, b, a, b_negative, a_negative = extended_gcd(y, x, radix, y_negative, x_negative)
+            else:
+                gcd, a, b, a_negative, b_negative = extended_gcd(x, y, radix, y_negative, x_negative)
+
+            
+            output[0] = custom_decimal_to_radix(a, radix)
+            if a_negative:
+                output[0] = add_minus(output[0])
+            output[1] = custom_decimal_to_radix(b, radix)
+            if b_negative:
+                output[1] = add_minus(output[1])
+            output[2] = custom_decimal_to_radix(gcd, radix)
         # et cetera
     else: # exercise["type"] == "modular_arithmetic"
         modulo = custom_radix_to_decimal(exercise["modulus"], radix)
@@ -87,12 +100,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if x_negative and y_negative:
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
-                output = "-" + output
+                output = add_minus(output)
             elif x_negative and not y_negative:
                 if bigger_than(x, y):
                     output = modular_subtraction(x, y, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
+                    output = add_minus(output)
                 else:
                     output = modular_subtraction(y, x, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
@@ -103,7 +116,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 else:
                     output = modular_subtraction(y, x, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
+                    output = add_minus(output)
             else:
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
@@ -116,12 +129,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
             elif x_negative and not y_negative:
                 output = modular_addition(x, y, modulo, radix)
                 output = custom_decimal_to_radix(output, radix)
-                output = "-" + output
+                output = add_minus(output)
             elif x_negative and y_negative:
                 if bigger_than(x, y):
                     output = modular_subtraction(x, y, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
+                    output = add_minus(output)
                 else:
                     output = modular_subtraction(y, x, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
@@ -132,7 +145,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 else:
                     output = modular_subtraction(y, x, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
-                    output = "-" + output
+                    output = add_minus(output)
         # et cetera
     if exercise["operation"] != "extended_euclidean_algorithm":
         if output is None:
@@ -164,6 +177,9 @@ def run_tests():
             print(true_answer["answer"], answer["answer"])
             if true_answer["answer"] == answer["answer"]:
                 success[i] = True
+        else:
+            if true_answer["answer-a"] == answer["answer-a"] and true_answer["answer-b"] == answer["answer-b"] and true_answer["answer-gcd"] == answer["answer-gcd"]:
+                success[i] = True
 
     for i in range(len(success)):
         if not success[i]:
@@ -178,18 +194,18 @@ x = "13"
 y = "13"
 modulo = "1022"
 
-x = "25"
-y = "10"
+x = "133"
+y = "143"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
-modulo = custom_radix_to_decimal(modulo, 16)
+modulo = custom_radix_to_decimal(modulo, 7)
 # modular_subtraction(x, y, modulo, 4)
 # print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-# run_tests()
+run_tests()
 
 
-print(extended_gcd(x,y, 10,False, False))
+# print(extended_gcd(x,y, 7,False, False))
 
 # # modular(subtraction())

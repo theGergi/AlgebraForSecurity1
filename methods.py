@@ -154,16 +154,16 @@ def mod(a, b, radix, a_negative, b_negative):
     return a, a_negative
 
 def div(a, b, radix, a_negative, b_negative):
-    nr = 0
+    nr = [0]
     a_bigger = bigger_than(a, b)
     while bigger_than(a, b):
         a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
-        nr=nr+1
+        nr = addition(nr, [1], radix)
     if(is_zero(subtraction_with_negative(a, b, radix, a_negative, b_negative)[0])):
         a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
-        nr=nr+1
-    nr=str(nr)
-    nr=custom_radix_to_decimal(nr, radix)
+        # nr=nr+1
+    # nr=str(nr)
+    # nr=custom_radix_to_decimal(nr, radix)
     return nr, not a_bigger
 
 def gcd(a, b, radix):
@@ -174,14 +174,18 @@ def gcd(a, b, radix):
 
 
 def extended_gcd(a, b, radix, a_negative, b_negative):
-    print("A: ", a, a_negative)
-    print("B: ", b, b_negative)
+
     if is_zero(a):
         return b, [0], [1], True, b_negative
     mod_ab, mod_ab_negative = mod(b, a, radix, b_negative, a_negative)
+    
     gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, mod_ab_negative, a_negative)
-    print(b, a)
+    print("A: ", a, a_negative)
+    print("B: ", b, b_negative)
+    print(mod_ab, mod_ab_negative)
+    print(gcd, x1, y1, x1_negative, y1_negative)
     r, r_negative = div(b, a, radix, b_negative, a_negative)
+    print(r, r_negative)
     r_x1, r_x1_negative = multiplication_primary_with_negative(r, x1, radix, r_negative, x1_negative)
     x, x_negative = subtraction_with_negative(y1, r_x1, radix, y1_negative, r_x1_negative)
     y = x1
