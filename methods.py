@@ -138,12 +138,7 @@ def extended_gcd(a, b, radix, a_negative, b_negative):
     mod_ab, mod_ab_negative = mod(b, a, radix, b_negative, a_negative)
     
     gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, mod_ab_negative, a_negative)
-    print("A: ", a, a_negative)
-    print("B: ", b, b_negative)
-    print(mod_ab, mod_ab_negative)
-    print(gcd, x1, y1, x1_negative, y1_negative)
     r, r_negative = div(b, a, radix, b_negative, a_negative)
-    print(r, r_negative)
     r_x1, r_x1_negative = multiplication_primary_with_negative(r, x1, radix, r_negative, x1_negative)
     x, x_negative = subtraction_with_negative(y1, r_x1, radix, y1_negative, r_x1_negative)
     y = x1
@@ -151,11 +146,11 @@ def extended_gcd(a, b, radix, a_negative, b_negative):
     return gcd, x, y, x_negative, x1_negative
 
 
-def modular_inverse(a, m, radix):
-    gcd, x, y = extended_gcd(a, m, radix)
+def modular_inverse(a, m, radix, a_negative, m_negative):
+    gcd, x, y, x_negative, y_negative = extended_gcd(a, m, radix, a_negative, m_negative)
     
     if is_zero(gcd):
         raise ValueError("Modular inverse does not exist.")
     
-    inverse = mod(x, m, radix)  # Calculate the modular inverse using your mod function
-    return inverse
+    inverse, i_negative = mod(x, m, radix, x_negative, m_negative)  # Calculate the modular inverse using your mod function
+    return inverse, i_negative

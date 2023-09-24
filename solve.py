@@ -153,7 +153,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "inversion":
             print(x)
             # x = modular_reduction(x, modulo, radix)
-            output, output_negative = modular_inverse( modulo,x, radix)
+            output, output_negative = modular_inverse(x, modulo, radix, x_negative, False)
             output = custom_decimal_to_radix(output, radix)
             if output_negative:
                 output = add_minus(output)
@@ -206,13 +206,13 @@ x = "13"
 y = "13"
 modulo = "8"
 
-x = "30"
-y = "15"
+x = "21"
+y = "34"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 7)
 # print(modular_reduction(x, modulo, 4))
-# print(modular_multiplication(x,y,modulo,10))
+# print(multiplication_primary(x,y,10))
 # print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 

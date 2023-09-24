@@ -97,26 +97,26 @@ def multiplication_primary(x, y, radix: int):
         else:
             x = [0] + x
     c = 0
-    x = [0] + x
-    y = [0] + y
+    # x = [0] + x
+    # y = [0] + y
     z = [0] * (len(x) ** 2)
     for i in range(len(x) - 1, -1, -1):
         inv_i = len(x) - 1 - i
-        mid_z = [0] * (len(x) ** 2)
+        mid_z = [0] * (len(x) * 2)
         mid_c = 0
         for j in range(len(y) - 1, -1, -1):
             inv_j = len(y) - 1 - j
-            a = [0] * (len(x) ** 2)
-            a[len(a) - 1 - inv_j] = x[i] * y[j] + mid_c
+            # a = [0] * (len(x) ** 2)
+            mid_z[len(mid_z) - 1 - inv_j] = x[i] * y[j] + mid_c
             # print(x[i], y[j], a[len(a) - 1 - inv_j], mid_c)
-            if a[len(a) - 1 - inv_j] >= radix:
-                mid_c = a[len(a) - 1 - inv_j] // radix
-                a[len(a) - 1 - inv_j] = a[len(a) - 1 - inv_j] % radix
+            if mid_z[len(mid_z) - 1 - inv_j] >= radix:
+                mid_c = mid_z[len(mid_z) - 1 - inv_j] // radix
+                mid_z[len(mid_z) - 1 - inv_j] = mid_z[len(mid_z) - 1 - inv_j] % radix
             else:
                 mid_c = 0
             # print("A ", a)
-            # print(mid_z, a)
-            mid_z = addition(mid_z, a, radix)
+            # print(mid_z)
+            # mid_z = addition(mid_z, a, radix)
             # print("Mid z ", mid_z)
         # print("======================================")
         mid_z += [0] * inv_i
