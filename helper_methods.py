@@ -6,7 +6,8 @@ def add_minus(x):
 
 def is_zero(num):
     return all(digit == 0 for digit in num)
-
+def is_one(num):
+    return num[-1] == 1
 def bigger_than(x, y):
     while(len(x) != len(y)):
         if len(x) > len(y):
