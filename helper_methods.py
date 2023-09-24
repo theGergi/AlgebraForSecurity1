@@ -29,7 +29,7 @@ def remove_leading_zeros_array(x):
     for i in range(len(x)):
         if x[i] != 0:
             return x[i:]
-            
+    return [0]
 
 def custom_radix_to_decimal(number_str, radix):
     

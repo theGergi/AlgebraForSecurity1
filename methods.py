@@ -83,7 +83,7 @@ def multiplication_karatsuba (x,y,radix:int):
     z = remove_leading_zeros(z)
     
     # Convert the result to the desired radix
-    return custom_decimal_to_radix(z,radix) 
+    return z
 
 def mod(a, b, radix, a_negative, b_negative):
     nr=0
@@ -116,12 +116,12 @@ def gcd(a, b, radix):
 
 
 def extended_gcd(a, b, radix, a_negative, b_negative):
-
     if is_zero(a):
         return b, [0], [1], True, b_negative
     mod_ab, mod_ab_negative = mod(b, a, radix, b_negative, a_negative)
     
     gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, mod_ab_negative, a_negative)
+    # print(gcd, x1, y1, x1_negative, y1_negative)
     r, r_negative = div(b, a, radix, b_negative, a_negative)
     r_x1, r_x1_negative = multiplication_primary_with_negative(r, x1, radix, r_negative, x1_negative)
     x, x_negative = subtraction_with_negative(y1, r_x1, radix, y1_negative, r_x1_negative)

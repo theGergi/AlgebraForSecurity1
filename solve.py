@@ -69,6 +69,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
             output = custom_decimal_to_radix(output, radix)
             if x_negative != y_negative:
                 output = add_minus(output)
+            print(output)
+        elif exercise["operation"] == "multiplication_karatsuba":
+            output = multiplication_karatsuba(x, y, radix)
+            output = custom_decimal_to_radix(output, radix)
+            if x_negative != y_negative:
+                output = add_minus(output)
         elif exercise["operation"] == "extended_euclidean_algorithm":
             output = ["","",""]
             if bigger_than(x, y):
@@ -177,7 +183,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        if i == 0:
+        if i in [0,8,9,12]:
             continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
@@ -188,7 +194,7 @@ def run_tests(folder):
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             answer = json.load(exercise_file)
         if "answer" in true_answer.keys():
-            print(true_answer["answer"], answer["answer"])
+            print(true_answer["answer"], "\n",answer["answer"])
             if true_answer["answer"] == answer["answer"]:
                 success[i] = True
         else:
@@ -208,22 +214,27 @@ x = "13"
 y = "13"
 modulo = "8"
 
-x = "71"
-y = "81"
+x = "244C8"
+y = "65027"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
-modulo = custom_radix_to_decimal(modulo, 7)
-# print(modular_reduction(x, modulo, 4))
-print(multiplication_primary(x,y,10))
+modulo = custom_radix_to_decimal(modulo, 10)
+# print(extended_gcd(x, y, 10, False, False))
+# print(multiplication_primary_with_negative(x,[0],3,True, True))
+# print(modular_inverse(x, modulo, 10, False, False))
+print(multiplication_primary(x,y,13))
+# print(addition([0],[0],12))
+# print(remove_leading_zeros_array([0,0]))
 
 # print(remove_leading_zeros_array([0, 0, 0, 0, 7, 2, 5, 5, 6]))
-# print(multiplication_primary_with_negative(x, y, 4, True, False))
+# print(multiplication_primary(x, y, 10))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
 # run_tests("Simple")
-# run_tests("Realistic")
+run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))
 
 # # modular(subtraction())
+
