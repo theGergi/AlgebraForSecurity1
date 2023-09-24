@@ -118,6 +118,7 @@ def div(a, b, radix, a_negative, b_negative):
         nr = addition(nr, [1], radix)
     if(is_zero(subtraction_with_negative(a, b, radix, a_negative, b_negative)[0])):
         a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
+        nr = addition(nr, [1], radix)
         # nr=nr+1
     # nr=str(nr)
     # nr=custom_radix_to_decimal(nr, radix)
