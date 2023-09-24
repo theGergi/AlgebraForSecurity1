@@ -76,7 +76,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             else:
                 gcd, a, b, a_negative, b_negative = extended_gcd(x, y, radix, y_negative, x_negative)
 
-            
             output[0] = custom_decimal_to_radix(a, radix)
             if a_negative:
                 output[0] = add_minus(output[0])
@@ -146,6 +145,19 @@ def solve_exercise(exercise_location : str, answer_location : str):
                     output = modular_subtraction(y, x, modulo, radix)
                     output = custom_decimal_to_radix(output, radix)
                     output = add_minus(output)
+        elif exercise["operation"] == "multiplication":
+            output = modular_multiplication(x,y,modulo,radix)
+            output = custom_decimal_to_radix(output, radix)
+            if x_negative != y_negative:
+                output = add_minus(output)
+        elif exercise["operation"] == "inversion":
+            print(x)
+            # x = modular_reduction(x, modulo, radix)
+            output, output_negative = modular_inverse( modulo,x, radix)
+            output = custom_decimal_to_radix(output, radix)
+            if output_negative:
+                output = add_minus(output)
+            
         # et cetera
     if exercise["operation"] != "extended_euclidean_algorithm":
         if output is None:
@@ -162,12 +174,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
         json.dump(answer, answer_file, indent=4)
         
 
-def run_tests():
+def run_tests(folder):
     success = [False] * 14
     for i in range(14):
         print(f"==================Exercise {i}====================")
-        solve_exercise(f"Examples\Simple\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
-        with open(f"Examples\Simple\Answers\\answer{i}.json", "r") as exercise_file:
+        solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
+        with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             true_answer = json.load(exercise_file)
         with open(f"Testing\\answer{i}.json", "r") as exercise_file:
@@ -200,11 +212,12 @@ x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 7)
 # print(modular_reduction(x, modulo, 4))
-print(modular_multiplication(x,y,modulo,10))
+# print(modular_multiplication(x,y,modulo,10))
 # print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-# run_tests()
+run_tests("Simple")
+# run_tests("Realistic")
 
 
 # print(extended_gcd(x,y, 7,False, False))
