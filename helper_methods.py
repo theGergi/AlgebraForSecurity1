@@ -25,6 +25,12 @@ def remove_leading_zeros(string):
         string = string[1:]
     return string
 
+def remove_leading_zeros_array(x):
+    for i in range(len(x)):
+        if x[i] != 0:
+            return x[i:]
+            
+
 def custom_radix_to_decimal(number_str, radix):
     
     if not 2 <= radix <= 16:

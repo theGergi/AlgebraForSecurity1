@@ -177,6 +177,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
+        if i == 0:
+            continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
@@ -206,20 +208,22 @@ x = "13"
 y = "13"
 modulo = "8"
 
-x = "21"
-y = "34"
+x = "71"
+y = "81"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 7)
 # print(modular_reduction(x, modulo, 4))
-# print(multiplication_primary(x,y,10))
+print(multiplication_primary(x,y,10))
+
+# print(remove_leading_zeros_array([0, 0, 0, 0, 7, 2, 5, 5, 6]))
 # print(multiplication_primary_with_negative(x, y, 4, True, False))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-run_tests("Simple")
+# run_tests("Simple")
 # run_tests("Realistic")
 
-
+# print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))
 
 # # modular(subtraction())
