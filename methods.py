@@ -2,104 +2,88 @@ from helper_methods import *
 from integer_arithmetic import *
 from modular_arithmetic import *
 
-def find_sum(str1, str2,radix:int):
-    if len(str1) > len(str2):
-        str1, str2 = str2, str1
-
-    str1 = str1[::-1]
-    str2 = str2[::-1]
-
-    n1 = len(str1)
-    n2 = len(str2)
-
-    carry = 0
-    result = []
-
-    for i in range(n1):
-        sum_digit = int(str1[i]) + int(str2[i]) + carry
-        result.append(str(sum_digit % radix))
-        carry = sum_digit // radix
-
-    for i in range(n1, n2):
-        sum_digit = int(str2[i]) + carry
-        result.append(str(sum_digit % radix))
-        carry = sum_digit // radix
-
-    if carry:
-        result.append(str(carry))
-
-    result.reverse()
-    return ''.join(result)
-
-def find_diff(str1, str2,radix:int):
-    str1 = str1[::-1]
-    str2 = str2[::-1]
-
-    n1 = len(str1)
-    n2 = len(str2)
-
-    carry = 0
-    result = []
-
-    for i in range(n2):
-        sub = int(str1[i]) - int(str2[i]) - carry
-        if sub < 0:
-            sub += radix
-            carry = 1
-        else:
-            carry = 0
-        result.append(str(sub))
-
-    for i in range(n2, n1):
-        sub = int(str1[i]) - carry
-        if sub < 0:
-            sub += radix
-            carry = 1
-        else:
-            carry = 0
-        result.append(str(sub))
-
-    result.reverse()
-    return ''.join(result)
-
-def karatsuba(A, B,radix:int):
-    if len(A) > len(B):
-        A, B = B, A
-
-    n1 = len(A)
-    n2 = len(B)
-
-    while n2 > n1:
-        A = '0' + A
+def multiplication_karatsuba (x,y,radix:int):
+    # Check if the length of x is greater than y, if so, swap them
+    if len(x) > len(y):
+        x, y = y, x 
+    
+    n1 = len(x)
+    n2 = len(y) 
+    
+    # Pad x with zeros to match the length of y
+    
+    x = [0]*(n2-n1) + x
+    
+    # Make n1 and n2 equal to the maximum of their original values
+    
+    n1,n2 = max(n1,n2),max(n1,n2)
+    
+    # If n1 is 1, perform primary multiplication and return the result
+    if (n1 == 1): 
+        ans = multiplication_primary(x,y,radix)
+        return ans
+        
+    # If n1 is odd, adjust the lengths and pad with zeros
+    if (n1 % 2 == 1):
         n1 += 1
+        n2 += 1
+        x = [0] + x
+        y = [0] + y
 
-    if n1 == 1:
-        ans = int(A) * int(B)
-        return str(ans)
+    xl = []
+    xr = []
+    yl = []
+    yr = []
+    
+    # Split x and y into left and right halves
+    
+    xl = x[:n1//2]
+    xr = x[n1//2:]
+    yl = y[:n2//2]
+    yr = y[n2//2:]
 
-    if n1 % 2 == 1:
-        n1 += 1
-        A = '0' + A
-        B = '0' + B
+    # Perform Karatsuba multiplication recursively
+    p = []
+    p = multiplication_karatsuba(xl, yl, radix)
 
-    Al = A[:n1 // 2]
-    Ar = A[n1 // 2:]
-    Bl = B[:n1 // 2]
-    Br = B[n1 // 2:]
+    q = []
+    q = multiplication_karatsuba(xr, yr, radix)
 
-    p = karatsuba(Al, Bl, radix)
-    q = karatsuba(Ar, Br, radix)
-    r = find_diff(karatsuba(find_sum(Al, Ar, radix), find_sum(Bl, Br, radix),radix), find_sum(p, q, radix), radix)
+    r = []
 
-    for i in range(n1):
-        p += '0'
-    for i in range(n1 // 2):
-        r += '0'
+    # Calculate the addition of the left and right halves of x and store it in t1
+    addition_of_xl_and_xr = addition(xl,xr,radix)
+    t1 = addition_of_xl_and_xr 
+    t1 = remove_leading_zeros(t1)
+    
+    # Calculate the addition of the left and right halves of y and store it in t2
+    addition_of_yl_and_yr = addition(yl,yr,radix)
+    t2 = addition_of_yl_and_yr 
+    t2 = remove_leading_zeros(t2)
 
-    ans = find_sum(p, find_sum(q, r,radix),radix)
-    ans = remove_leading_zeros(ans)
+    # Perform Karatsuba multiplication recursively on t1 and t2 and store the result in t3
+    kar_of_sum = multiplication_karatsuba(t1,t2,radix)
+    t3 = kar_of_sum
 
-    return ans
+    # Calculate the addition of the partial results p and q and store it in t4
+    addition_of_p_and_q = addition(p,q,radix)
+    t4 = addition_of_p_and_q
+
+    # Perform subtraction of t4 from t3 to calculate the final result and store it in r
+    r = subtraction(t3 , t4 , radix)
+
+    # Pad the lists p and r with zeros to match the expected result length
+    p = p + [0]*n1
+    r = r + [0]*(n1//2)
+
+    z = [] 
+    # Calculate the final result by adding p, q, and r
+    z = addition(p, addition(q, r,radix),radix)
+
+    z = remove_leading_zeros(z)
+    
+    # Convert the result to the desired radix
+    return custom_decimal_to_radix(z,radix) 
 
 def mod(a, b, radix, a_negative, b_negative):
     nr=0
