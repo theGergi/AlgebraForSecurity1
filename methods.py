@@ -2,7 +2,7 @@ from helper_methods import *
 from integer_arithmetic import *
 from modular_arithmetic import *
 
-def karatsuba (x,y,radix:int):
+def multiplication_karatsuba (x,y,radix:int):
     
     if len(x) > len(y):
         x, y = y, x 
@@ -43,10 +43,10 @@ def karatsuba (x,y,radix:int):
     yr = y[n2//2:]
 
     p = []
-    p = karatsuba(xl, yl, radix)
+    p = multiplication_karatsuba(xl, yl, radix)
 
     q = []
-    q = karatsuba(xr, yr, radix)
+    q = multiplication_karatsuba(xr, yr, radix)
 
     r = []
 
@@ -61,7 +61,7 @@ def karatsuba (x,y,radix:int):
     t2 = addition_of_yl_and_yr 
     t2 = remove_leading_zeros(t2)
 
-    kar_of_sum = karatsuba(t1,t2,radix)
+    kar_of_sum = multiplication_karatsuba(t1,t2,radix)
     t3 = kar_of_sum
 
     addition_of_p_and_q = addition(p,q,radix)
