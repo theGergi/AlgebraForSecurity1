@@ -137,5 +137,5 @@ def modular_inverse(a, m, radix, a_negative, m_negative):
         raise ValueError("Modular inverse does not exist.")
     inverse, i_negative = mod(x, m, radix, x_negative, m_negative)  # Calculate the modular inverse using your mod function
     if x_negative:
-        inverse = addition_with_negative(inverse, m, radix,i_negative,m_negative)  # Add m to make x positive
+        inverse, i_negative = addition_with_negative(inverse, m, radix,i_negative,m_negative)  # Add m to make x positive
     return inverse, i_negative
