@@ -183,8 +183,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        if i in [0,8,9,12]:
-            continue
+        # if i in [0,8,9,12]:
+        #     continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
@@ -200,6 +200,8 @@ def run_tests(folder):
         else:
             if true_answer["answer-a"] == answer["answer-a"] and true_answer["answer-b"] == answer["answer-b"] and true_answer["answer-gcd"] == answer["answer-gcd"]:
                 success[i] = True
+        if all(success):
+            print("ALL TESTS PASSED!")
 
     for i in range(len(success)):
         if not success[i]:
@@ -230,8 +232,8 @@ print(multiplication_primary(x,y,13))
 # print(multiplication_primary(x, y, 10))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-# run_tests("Simple")
-run_tests("Realistic")
+run_tests("Simple")
+# run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))
