@@ -3,26 +3,27 @@ from integer_arithmetic import *
 from modular_arithmetic import *
 
 def multiplication_karatsuba (x,y,radix:int):
-    
+    # Check if the length of x is greater than y, if so, swap them
     if len(x) > len(y):
         x, y = y, x 
     
     n1 = len(x)
     n2 = len(y) 
     
+    # Pad x with zeros to match the length of y
+    
     x = [0]*(n2-n1) + x
     
-    #padding zeros at the beginning of the smaller number in order for the numbers to have the same number of digits
+    # Make n1 and n2 equal to the maximum of their original values
     
     n1,n2 = max(n1,n2),max(n1,n2)
     
-    #base case
+    # If n1 is 1, perform primary multiplication and return the result
     if (n1 == 1): 
         ans = multiplication_primary(x,y,radix)
         return ans
         
-    #in case the number of digits is odd, pad with a zero
-    #to make it even
+    # If n1 is odd, adjust the lengths and pad with zeros
     if (n1 % 2 == 1):
         n1 += 1
         n2 += 1
@@ -34,14 +35,14 @@ def multiplication_karatsuba (x,y,radix:int):
     yl = []
     yr = []
     
-    #find the values of xl, xr, yl, yr 
-    #which are needed fot karatsuba multiplication
+    # Split x and y into left and right halves
     
     xl = x[:n1//2]
     xr = x[n1//2:]
     yl = y[:n2//2]
     yr = y[n2//2:]
 
+    # Perform Karatsuba multiplication recursively
     p = []
     p = multiplication_karatsuba(xl, yl, radix)
 
@@ -50,38 +51,38 @@ def multiplication_karatsuba (x,y,radix:int):
 
     r = []
 
-    # a lot of lists are added to make the code easier to follow
-    # and also easier to debug 
-    
+    # Calculate the addition of the left and right halves of x and store it in t1
     addition_of_xl_and_xr = addition(xl,xr,radix)
     t1 = addition_of_xl_and_xr 
     t1 = remove_leading_zeros(t1)
-
+    
+    # Calculate the addition of the left and right halves of y and store it in t2
     addition_of_yl_and_yr = addition(yl,yr,radix)
     t2 = addition_of_yl_and_yr 
     t2 = remove_leading_zeros(t2)
 
+    # Perform Karatsuba multiplication recursively on t1 and t2 and store the result in t3
     kar_of_sum = multiplication_karatsuba(t1,t2,radix)
     t3 = kar_of_sum
 
+    # Calculate the addition of the partial results p and q and store it in t4
     addition_of_p_and_q = addition(p,q,radix)
     t4 = addition_of_p_and_q
 
-
+    # Perform subtraction of t4 from t3 to calculate the final result and store it in r
     r = subtraction(t3 , t4 , radix)
 
-    # Multiply p by 10^n
+    # Pad the lists p and r with zeros to match the expected result length
     p = p + [0]*n1
-
-    # Multiply r by 10^(n/2)
     r = r + [0]*(n1//2)
 
     z = [] 
-    #calculate final answer
+    # Calculate the final result by adding p, q, and r
     z = addition(p, addition(q, r,radix),radix)
 
     z = remove_leading_zeros(z)
     
+    # Convert the result to the desired radix
     return custom_decimal_to_radix(z,radix) 
 
 def mod(a, b, radix, a_negative, b_negative):
