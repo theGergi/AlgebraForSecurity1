@@ -2,104 +2,87 @@ from helper_methods import *
 from integer_arithmetic import *
 from modular_arithmetic import *
 
-def find_sum(str1, str2,radix:int):
-    if len(str1) > len(str2):
-        str1, str2 = str2, str1
-
-    str1 = str1[::-1]
-    str2 = str2[::-1]
-
-    n1 = len(str1)
-    n2 = len(str2)
-
-    carry = 0
-    result = []
-
-    for i in range(n1):
-        sum_digit = int(str1[i]) + int(str2[i]) + carry
-        result.append(str(sum_digit % radix))
-        carry = sum_digit // radix
-
-    for i in range(n1, n2):
-        sum_digit = int(str2[i]) + carry
-        result.append(str(sum_digit % radix))
-        carry = sum_digit // radix
-
-    if carry:
-        result.append(str(carry))
-
-    result.reverse()
-    return ''.join(result)
-
-def find_diff(str1, str2,radix:int):
-    str1 = str1[::-1]
-    str2 = str2[::-1]
-
-    n1 = len(str1)
-    n2 = len(str2)
-
-    carry = 0
-    result = []
-
-    for i in range(n2):
-        sub = int(str1[i]) - int(str2[i]) - carry
-        if sub < 0:
-            sub += radix
-            carry = 1
-        else:
-            carry = 0
-        result.append(str(sub))
-
-    for i in range(n2, n1):
-        sub = int(str1[i]) - carry
-        if sub < 0:
-            sub += radix
-            carry = 1
-        else:
-            carry = 0
-        result.append(str(sub))
-
-    result.reverse()
-    return ''.join(result)
-
-def karatsuba(A, B,radix:int):
-    if len(A) > len(B):
-        A, B = B, A
-
-    n1 = len(A)
-    n2 = len(B)
-
-    while n2 > n1:
-        A = '0' + A
+def karatsuba (x,y,radix:int):
+    
+    if len(x) > len(y):
+        x, y = y, x 
+    
+    n1 = len(x)
+    n2 = len(y) 
+    
+    x = [0]*(n2-n1) + x
+    
+    #padding zeros at the beginning of the smaller number in order for the numbers to have the same number of digits
+    
+    n1,n2 = max(n1,n2),max(n1,n2)
+    
+    #base case
+    if (n1 == 1): 
+        ans = multiplication_primary(x,y,radix)
+        return ans
+        
+    #in case the number of digits is odd, pad with a zero
+    #to make it even
+    if (n1 % 2 == 1):
         n1 += 1
+        n2 += 1
+        x = [0] + x
+        y = [0] + y
 
-    if n1 == 1:
-        ans = int(A) * int(B)
-        return str(ans)
+    xl = []
+    xr = []
+    yl = []
+    yr = []
+    
+    #find the values of xl, xr, yl, yr 
+    #which are needed fot karatsuba multiplication
+    
+    xl = x[:n1//2]
+    xr = x[n1//2:]
+    yl = y[:n2//2]
+    yr = y[n2//2:]
 
-    if n1 % 2 == 1:
-        n1 += 1
-        A = '0' + A
-        B = '0' + B
+    p = []
+    p = karatsuba(xl, yl, radix)
 
-    Al = A[:n1 // 2]
-    Ar = A[n1 // 2:]
-    Bl = B[:n1 // 2]
-    Br = B[n1 // 2:]
+    q = []
+    q = karatsuba(xr, yr, radix)
 
-    p = karatsuba(Al, Bl, radix)
-    q = karatsuba(Ar, Br, radix)
-    r = find_diff(karatsuba(find_sum(Al, Ar, radix), find_sum(Bl, Br, radix),radix), find_sum(p, q, radix), radix)
+    r = []
 
-    for i in range(n1):
-        p += '0'
-    for i in range(n1 // 2):
-        r += '0'
+    # a lot of lists are added to make the code easier to follow
+    # and also easier to debug 
+    
+    addition_of_xl_and_xr = addition(xl,xr,radix)
+    t1 = addition_of_xl_and_xr 
+    t1 = remove_leading_zeros(t1)
 
-    ans = find_sum(p, find_sum(q, r,radix),radix)
-    ans = remove_leading_zeros(ans)
+    addition_of_yl_and_yr = addition(yl,yr,radix)
+    t2 = addition_of_yl_and_yr 
+    t2 = remove_leading_zeros(t2)
 
-    return ans
+    kar_of_sum = karatsuba(t1,t2,radix)
+    t3 = kar_of_sum
+
+    addition_of_p_and_q = addition(p,q,radix)
+    t4 = addition_of_p_and_q
+
+
+    r = subtraction(t3 , t4 , radix)
+
+    # Multiply p by 10^n
+    p = p + [0]*n1
+
+    # Multiply r by 10^(n/2)
+    r = r + [0]*(n1//2)
+
+    z = [] 
+    #calculate final answer
+    z = addition(p, addition(q, r,radix),radix)
+
+    z = remove_leading_zeros(z)
+    
+    return custom_decimal_to_radix(z,radix) 
 
 def mod(a, b, radix, a_negative, b_negative):
     nr=0
