@@ -106,10 +106,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             output = modular_subtraction(x, y, modulo, radix, x_negative, y_negative)
             output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "multiplication":
-            output = modular_multiplication(x,y,modulo,radix)
+            output = modular_multiplication(x,y,modulo,radix, x_negative, y_negative)
             output = custom_decimal_to_radix(output, radix)
-            if x_negative != y_negative:
-                output = add_minus(output)
         elif exercise["operation"] == "inversion":
             # x = modular_reduction(x, modulo, radix)
             output, output_negative = modular_inverse(x, modulo, radix, x_negative, False)
@@ -184,13 +182,14 @@ modulo = custom_radix_to_decimal(modulo, 10)
 # print(remove_leading_zeros_array([0,0]))
 
 # print(modular_subtraction([7], [6], [4], 10, True, False))
-# print(modular_addition([7], [8], [4], 10, True, True))
+# print(modular_addition([7], [7], [4], 10, False, True))
+# print(modular_multiplication([7], [9], [4], 10, True, True))
 # print(remove_leading_zeros_array([0, 0, 0, 0, 7, 2, 5, 5, 6]))
 # print(multiplication_primary(x, y, 10))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
 run_tests("Simple")
-run_tests("Realistic")
+# run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))

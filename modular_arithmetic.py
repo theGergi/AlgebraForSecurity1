@@ -32,8 +32,11 @@ def modular_subtraction(x, y, modulo, radix, x_negative, y_negative):
         z = addition(z, modulo, radix)
     return z
 
-def modular_multiplication(x,y,modulo,radix):
+def modular_multiplication(x,y,modulo,radix, x_negative, y_negative):
     x = modular_reduction(x, modulo, radix)
     y = modular_reduction(y, modulo, radix)
     product = multiplication_primary(x, y, radix)
-    return modular_reduction(product, modulo, radix)
+    product = modular_reduction(product, modulo, radix)
+    if x_negative != y_negative and not is_zero(product):
+        product = subtraction(modulo, product, radix)
+    return product
