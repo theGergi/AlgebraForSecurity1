@@ -64,11 +64,11 @@ def subtraction(x, y, radix: int):
 
     #subtract the 2 numbers
     for i in range(len(x) - 1, -1, -1):
-        if x[i]>=y[i]:
-            z[i] = x[i] - y[i] + c
+        z[i] = x[i] - y[i] + c
+        if z[i] >= 0:
             c = 0
         else:
-            z[i] = x[i] - y[i] + c + radix
+            z[i] += radix
             c = -1
     # print(z)
     # print(custom_decimal_to_radix(z, radix))

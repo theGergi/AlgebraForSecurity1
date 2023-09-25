@@ -2,14 +2,15 @@ from helper_methods import *
 from integer_arithmetic import *
 
 def modular_reduction(x, modulo, radix):
-    modulo = [0] * (len(x) - len(modulo)) + modulo
+    # modulo = [0] * (len(x) - len(modulo)) + modulo
     while(bigger_than(x, modulo) or x == modulo):
-        # print("X: ", x)
+        
         y = modulo + [0] * (len(x) - len(modulo))
+        
         if bigger_than(y, x):
             y = modulo + [0] * (len(x) - len(modulo) - 1)
-        # print("Subtractor:", y)
-        x = subtraction(x, y, radix)
+        print(x,y)
+        x = remove_leading_zeros_array(subtraction(x, y, radix))
     return x
     
 def modular_addition(x, y, modulo, radix):

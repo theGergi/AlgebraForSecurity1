@@ -94,19 +94,46 @@ def mod(a, b, radix, a_negative, b_negative):
         a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
     return a, a_negative
 
-def div(a, b, radix, a_negative, b_negative):
+def div(a, b, radix):
     nr = [0]
     a_bigger = bigger_than(a, b)
     while bigger_than(a, b):
-        a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
+        a = subtraction(a, b, radix)
         nr = addition(nr, [1], radix)
-    if(is_zero(subtraction_with_negative(a, b, radix, a_negative, b_negative)[0])):
-        a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
+    if(is_zero(subtraction(a, b, radix))):
+        a = subtraction(a, b, radix)
         nr = addition(nr, [1], radix)
-        # nr=nr+1
-    # nr=str(nr)
-    # nr=custom_radix_to_decimal(nr, radix)
     return nr, not a_bigger
+
+def div2(a, b, radix):
+    a = remove_leading_zeros_array(a)
+    b = remove_leading_zeros_array(b)
+    a_bigger = bigger_than(a, b)
+    num = [0] * len(a)
+    mult = 0
+    old_mult = None
+    nr = 0
+    while(bigger_than(a, b) or a == b):
+        # print("hey")
+        mult = len(a) - len(b)
+        y = b + [0] * (mult)
+        if bigger_than(y, a):
+            y = b + [0] * (mult - 1)
+            mult -= 1
+        # print(a,y)
+        a = remove_leading_zeros_array(subtraction(a, y, radix))
+        if mult == old_mult or old_mult is None:
+            nr += 1
+        else:
+            num[len(num) - 1 - old_mult] = nr
+            nr = 1
+        # print(mult)
+        old_mult = mult
+        # num  = [len(a) - len(b)] + num
+        # print(num)
+    num[len(num) - 1 - mult] = nr
+    # print("result: ", num)
+    return num, not a_bigger
 
 def gcd(a, b, radix):
     while is_zero(b) == False:
@@ -122,7 +149,7 @@ def extended_gcd(a, b, radix, a_negative, b_negative):
     
     gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, mod_ab_negative, a_negative)
     # print(gcd, x1, y1, x1_negative, y1_negative)
-    r, r_negative = div(b, a, radix, b_negative, a_negative)
+    r, r_negative = div2(b, a, radix)
     r_x1, r_x1_negative = multiplication_primary_with_negative(r, x1, radix, r_negative, x1_negative)
     x, x_negative = subtraction_with_negative(y1, r_x1, radix, y1_negative, r_x1_negative)
     y = x1

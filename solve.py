@@ -183,8 +183,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        # if i in [0,8,9,12]:
-        #     continue
+        if i in [8,9,12]:
+            continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
@@ -216,24 +216,28 @@ x = "13"
 y = "13"
 modulo = "8"
 
-x = "244C8"
-y = "65027"
+x = "133"
+y = "143"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 10)
-# print(extended_gcd(x, y, 10, False, False))
+# print(div2(x,y, 10))
+# print(modular_reduction(x,y, 10))
+print(extended_gcd(x, y, 7, False, False))
 # print(multiplication_primary_with_negative(x,[0],3,True, True))
 # print(modular_inverse(x, modulo, 10, False, False))
-print(multiplication_primary(x,y,13))
+# print(multiplication_primary(x,y,13))
 # print(addition([0],[0],12))
 # print(remove_leading_zeros_array([0,0]))
+
+# print(subtraction([6, 0, 0], [0, 0, 5],10))
 
 # print(remove_leading_zeros_array([0, 0, 0, 0, 7, 2, 5, 5, 6]))
 # print(multiplication_primary(x, y, 10))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-run_tests("Simple")
-# run_tests("Realistic")
+# run_tests("Simple")
+run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))
