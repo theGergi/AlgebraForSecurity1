@@ -100,64 +100,17 @@ def solve_exercise(exercise_location : str, answer_location : str):
             output = modular_reduction(x, modulo, radix)
             output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "addition":
-            x = modular_reduction(x, modulo, radix)
-            y = modular_reduction(y, modulo, radix)
-            if x_negative and y_negative:
-                output = modular_addition(x, y, modulo, radix)
-                output = custom_decimal_to_radix(output, radix)
-                output = add_minus(output)
-            elif x_negative and not y_negative:
-                if bigger_than(x, y):
-                    output = modular_subtraction(x, y, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = add_minus(output)
-                else:
-                    output = modular_subtraction(y, x, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-            elif not x_negative and y_negative:
-                if bigger_than(x, y):
-                    output = modular_subtraction(x, y, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                else:
-                    output = modular_subtraction(y, x, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = add_minus(output)
-            else:
-                output = modular_addition(x, y, modulo, radix)
-                output = custom_decimal_to_radix(output, radix)
+            output = modular_addition(x, y, modulo, radix, x_negative, y_negative)
+            output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "subtraction":
-            x = modular_reduction(x, modulo, radix)
-            y = modular_reduction(y, modulo, radix)
-            if not x_negative and y_negative:
-                output = modular_addition(x, y, modulo, radix)
-                output = custom_decimal_to_radix(output, radix)
-            elif x_negative and not y_negative:
-                output = modular_addition(x, y, modulo, radix)
-                output = custom_decimal_to_radix(output, radix)
-                output = add_minus(output)
-            elif x_negative and y_negative:
-                if bigger_than(x, y):
-                    output = modular_subtraction(x, y, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = add_minus(output)
-                else:
-                    output = modular_subtraction(y, x, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-            else:
-                if bigger_than(x, y):
-                    output = modular_subtraction(x, y, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                else:
-                    output = modular_subtraction(y, x, modulo, radix)
-                    output = custom_decimal_to_radix(output, radix)
-                    output = add_minus(output)
+            output = modular_subtraction(x, y, modulo, radix, x_negative, y_negative)
+            output = custom_decimal_to_radix(output, radix)
         elif exercise["operation"] == "multiplication":
             output = modular_multiplication(x,y,modulo,radix)
             output = custom_decimal_to_radix(output, radix)
             if x_negative != y_negative:
                 output = add_minus(output)
         elif exercise["operation"] == "inversion":
-            print(x)
             # x = modular_reduction(x, modulo, radix)
             output, output_negative = modular_inverse(x, modulo, radix, x_negative, False)
             output = custom_decimal_to_radix(output, radix)
@@ -183,7 +136,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        if i in [8,9,12]:
+        if i in [8]:
             continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
@@ -223,20 +176,20 @@ y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 10)
 # print(div2(x,y, 10))
 # print(modular_reduction(x,y, 10))
-print(extended_gcd(x, y, 7, False, False))
+# print(extended_gcd(x, y, 7, False, False))
 # print(multiplication_primary_with_negative(x,[0],3,True, True))
 # print(modular_inverse(x, modulo, 10, False, False))
 # print(multiplication_primary(x,y,13))
 # print(addition([0],[0],12))
 # print(remove_leading_zeros_array([0,0]))
 
-# print(subtraction([6, 0, 0], [0, 0, 5],10))
-
+# print(modular_subtraction([7], [6], [4], 10, True, False))
+# print(modular_addition([7], [8], [4], 10, True, True))
 # print(remove_leading_zeros_array([0, 0, 0, 0, 7, 2, 5, 5, 6]))
 # print(multiplication_primary(x, y, 10))
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
-# run_tests("Simple")
+run_tests("Simple")
 run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
