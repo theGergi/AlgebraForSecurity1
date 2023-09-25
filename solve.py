@@ -135,12 +135,12 @@ def run_tests(folder):
     for i in range(14):
         print(f"==================Exercise {i}====================")
         start = time.time()
-        solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
+        solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\{folder}\\answer{i}.json")
         print(time.time() - start)
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             true_answer = json.load(exercise_file)
-        with open(f"Testing\\answer{i}.json", "r") as exercise_file:
+        with open(f"Testing\{folder}\\answer{i}.json", "r") as exercise_file:
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             answer = json.load(exercise_file)
         if "answer" in true_answer.keys():
