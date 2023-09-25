@@ -91,6 +91,8 @@ def subtraction_with_negative(x, y, radix, x_negative = False, y_negative = Fals
             return subtraction(y, x, radix), True
 
 def multiplication_primary(x, y, radix: int):
+    x = remove_leading_zeros_array(x)
+    y = remove_leading_zeros_array(y)
     if is_zero(x) or is_zero(y):
         return [0]
     while(len(x) != len(y)):
@@ -124,7 +126,7 @@ def multiplication_primary(x, y, radix: int):
     z = remove_leading_zeros_array(z)
     return z
 
-def multiplication_primary_with_negative(x, y, radix, x_negative = False, y_negative = False):
+def multiplication_primary_with_negative(x, y, radix, x_negative, y_negative):
     z = multiplication_primary(x, y, radix)
 
     if x_negative != y_negative:

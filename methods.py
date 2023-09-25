@@ -85,27 +85,7 @@ def multiplication_karatsuba (x,y,radix:int):
     # Convert the result to the desired radix
     return z
 
-def mod(a, b, radix, a_negative, b_negative):
-    nr=0
-    while bigger_than(a, b):
-        a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
-    a_minus_b, negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
-    if(is_zero(a_minus_b)):
-        a, a_negative = subtraction_with_negative(a, b, radix, a_negative, b_negative)
-    return a, a_negative
-
-def div(a, b, radix):
-    nr = [0]
-    a_bigger = bigger_than(a, b)
-    while bigger_than(a, b):
-        a = subtraction(a, b, radix)
-        nr = addition(nr, [1], radix)
-    if(is_zero(subtraction(a, b, radix))):
-        a = subtraction(a, b, radix)
-        nr = addition(nr, [1], radix)
-    return nr, not a_bigger
-
-def div2(a, b, radix):
+def division_with_remainder(a, b, radix):
     a = remove_leading_zeros_array(a)
     b = remove_leading_zeros_array(b)
     a_bigger = bigger_than(a, b)
@@ -114,42 +94,26 @@ def div2(a, b, radix):
     old_mult = None
     nr = 0
     while(bigger_than(a, b) or a == b):
-        # print("hey")
         mult = len(a) - len(b)
         y = b + [0] * (mult)
         if bigger_than(y, a):
             y = b + [0] * (mult - 1)
             mult -= 1
-        # print(a,y)
         a = remove_leading_zeros_array(subtraction(a, y, radix))
         if mult == old_mult or old_mult is None:
             nr += 1
         else:
             num[len(num) - 1 - old_mult] = nr
             nr = 1
-        # print(mult)
         old_mult = mult
-        # num  = [len(a) - len(b)] + num
-        # print(num)
     num[len(num) - 1 - mult] = nr
-    # print("result: ", num)
-    return num, not a_bigger
+    return num, a, not a_bigger
 
-def gcd(a, b, radix):
-    while is_zero(b) == False:
-        a, b = b, mod(a, b, radix)
-    return a
-
-
-
-def extended_gcd(a, b, radix, a_negative, b_negative):
+def extended_gcd(a, b, radix, a_negative, b_negative, depth):
     if is_zero(a):
         return b, [0], [1], True, b_negative
-    mod_ab, mod_ab_negative = mod(b, a, radix, b_negative, a_negative)
-    
-    gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, mod_ab_negative, a_negative)
-    # print(gcd, x1, y1, x1_negative, y1_negative)
-    r, r_negative = div2(b, a, radix)
+    r, mod_ab, r_negative = division_with_remainder(b, a, radix)
+    gcd, x1, y1, x1_negative, y1_negative = extended_gcd(mod_ab, a, radix, False, a_negative, depth+1)
     r_x1, r_x1_negative = multiplication_primary_with_negative(r, x1, radix, r_negative, x1_negative)
     x, x_negative = subtraction_with_negative(y1, r_x1, radix, y1_negative, r_x1_negative)
     y = x1
@@ -158,11 +122,11 @@ def extended_gcd(a, b, radix, a_negative, b_negative):
 
 
 def modular_inverse(a, m, radix, a_negative, m_negative):
-    gcd, x, y, x_negative, y_negative = extended_gcd(a, m, radix, a_negative, m_negative)
+    gcd, x, y, x_negative, y_negative = extended_gcd(a, m, radix, a_negative, m_negative, 0)
     
     if not is_one(gcd):
         return None, None
-    inverse, i_negative = mod(x, m, radix, x_negative, m_negative)  # Calculate the modular inverse using your mod function
+    inverse = modular_reduction(x, m, radix)  # Calculate the modular inverse using your mod function
     if x_negative:
-        inverse, i_negative = addition_with_negative(inverse, m, radix,i_negative,m_negative)  # Add m to make x positive
-    return inverse, i_negative
+        inverse = subtraction(m, inverse, radix)  # Add m to make x positive
+    return inverse, False

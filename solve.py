@@ -78,9 +78,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "extended_euclidean_algorithm":
             output = ["","",""]
             if bigger_than(x, y):
-                gcd, b, a, b_negative, a_negative = extended_gcd(y, x, radix, y_negative, x_negative)
+                gcd, b, a, b_negative, a_negative = extended_gcd(y, x, radix, y_negative, x_negative,0)
             else:
-                gcd, a, b, a_negative, b_negative = extended_gcd(x, y, radix, y_negative, x_negative)
+                gcd, a, b, a_negative, b_negative = extended_gcd(x, y, radix, y_negative, x_negative,0)
 
             output[0] = custom_decimal_to_radix(a, radix)
             if a_negative:
@@ -134,8 +134,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        if i in [8]:
-            continue
+        # if i in [8]:
+        #     continue
         print(f"==================Exercise {i}====================")
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
@@ -163,22 +163,54 @@ def run_tests(folder):
 
 
 
-x = "13"
-y = "13"
-modulo = "8"
 
-x = "133"
-y = "143"
+modulo = "1A"
+
+x = "66587035715148446346874731846737087867008364220700646718283271560481083137227376177353087637571246438000788848844043451382070421132448404267540763350327263047261277412373587812752565827213141264341350587525784132132617778141377084563767181255587704670110266704281572371438721426721346002636542666222542780033173664347471165344483368515708487004336742657467470836824234701358687027723561383147242771403324856404287700510525526603266106246534507031451184573467716178048411678486004860244311600628287530503767628508475421730505"
+y = "5651444666070846668348266018827322313138265145873280557014274777278384433362481865118770803017464760411330230083622882610472626545522771834518083446072541276231680755213580880284122700478248423407183137704225068141582003322843403540172154702242177813841463480866685880424820425816676100278114044080170131833244417012877634064326454304042472258787543255621208443067063086302161630425547405087482868650511381563337064542343648736868438030374684556201011674330416678010666471000823638214273211055745288401132068630856630558703"
 x = custom_radix_to_decimal(x, 16)
 y = custom_radix_to_decimal(y, 16)
 modulo = custom_radix_to_decimal(modulo, 10)
-# print(div2(x,y, 10))
+# print(division_with_remainder(x,y, 10))
 # print(modular_reduction(x,y, 10))
 # print(extended_gcd(x, y, 7, False, False))
 # print(multiplication_primary_with_negative(x,[0],3,True, True))
-# print(modular_inverse(x, modulo, 10, False, False))
-# print(multiplication_primary(x,y,13))
-# print(addition([0],[0],12))
+# print(modular_inverse(x, modulo, 14, False, False))
+# mod(x,y,10,True,False)
+
+# print(multiplication_karatsuba(x,y,13))
+# import time
+
+# print("subtraction")
+# start0 = time.time()
+# for i in range(1):
+#     subtraction(x,y,12)
+# print(time.time() - start0)
+
+# print("multiplication")
+# start1 = time.time()
+# for i in range(1):
+#     multiplication_primary(x,y,13)
+# print(time.time() - start1)
+
+# print("addition")
+# start2 = time.time()
+# for i in range(1):
+#     addition(x,y,12)
+# print(time.time() - start2)
+
+# print("addition with negative")
+# start3 = time.time()
+# for i in range(1):
+#     addition_with_negative(x,y,12, False, True)
+# print(time.time() - start3)
+
+# print("subtraction with negative")
+# start4 = time.time()
+# for i in range(1):
+#     subtraction_with_negative(x,y,12, False, True)
+# print(time.time() - start4)
+
 # print(remove_leading_zeros_array([0,0]))
 
 # print(modular_subtraction([7], [6], [4], 10, True, False))
@@ -189,7 +221,7 @@ modulo = custom_radix_to_decimal(modulo, 10)
 # solve_exercise("Examples\Simple\Exercises\exercise0.json", "answer.json")
 
 run_tests("Simple")
-# run_tests("Realistic")
+run_tests("Realistic")
 
 # print(div(x, y, 10, False, False))
 # print(extended_gcd(x,y, 7,False, False))
