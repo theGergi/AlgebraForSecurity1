@@ -16,6 +16,7 @@
 
 # Import built-in json library for handling input/output 
 import json
+import time
 from methods import *
 
 
@@ -69,7 +70,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             output = custom_decimal_to_radix(output, radix)
             if x_negative != y_negative:
                 output = add_minus(output)
-            print(output)
         elif exercise["operation"] == "multiplication_karatsuba":
             output = multiplication_karatsuba(x, y, radix)
             output = custom_decimal_to_radix(output, radix)
@@ -129,15 +129,14 @@ def solve_exercise(exercise_location : str, answer_location : str):
     with open(answer_location, "w") as answer_file:
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
-        
 
 def run_tests(folder):
     success = [False] * 14
     for i in range(14):
-        # if i in [8]:
-        #     continue
         print(f"==================Exercise {i}====================")
+        start = time.time()
         solve_exercise(f"Examples\{folder}\Exercises\exercise{i}.json", f"Testing\\answer{i}.json")
+        print(time.time() - start)
         with open(f"Examples\{folder}\Answers\\answer{i}.json", "r") as exercise_file:
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             true_answer = json.load(exercise_file)
@@ -145,7 +144,7 @@ def run_tests(folder):
             # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
             answer = json.load(exercise_file)
         if "answer" in true_answer.keys():
-            print(true_answer["answer"], "\n",answer["answer"])
+            # print(true_answer["answer"], "\n",answer["answer"])
             if true_answer["answer"] == answer["answer"]:
                 success[i] = True
         else:
